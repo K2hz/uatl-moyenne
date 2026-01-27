@@ -93,7 +93,7 @@
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full gradient-bg text-white overflow-auto scroll-container">
-  <div id="app" class="min-h-full w-full flex flex-col"><!-- Header -->
+  <div id="app" class="min-h-full w-full flex flex-col">
    <header class="py-6 px-4 text-center border-b border-white/10">
     <div class="flex items-center justify-center gap-3 mb-2">
      <svg class="w-10 h-10 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -101,19 +101,19 @@
      <h1 id="app-title" class="text-3xl md:text-4xl font-bold glow-text">🎓 ST ing Grade Calculator</h1>
     </div>
     <p class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">يرجى الابلاغ عن اي خطأ او مشكله في التيليغرام المتروك اسفل الصفحه</p>
-   </header><!-- Year Tabs -->
+   </header>
    <nav class="px-4 py-4">
     <div class="flex flex-wrap justify-center gap-2 md:gap-3 max-w-4xl mx-auto"><button onclick="selectYear(1)" id="year-tab-1" class="year-tab tab-active px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-300"> 1st Year </button> <button onclick="selectYear(2)" id="year-tab-2" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 2nd Year </button> <button onclick="selectYear(3)" id="year-tab-3" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 3rd Year </button> <button onclick="selectYear(4)" id="year-tab-4" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 4th Year </button> <button onclick="selectYear(5)" id="year-tab-5" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 5th Year </button>
     </div>
-   </nav><!-- Main Content -->
+   </nav>
    <main class="flex-1 px-4 pb-8">
-    <div class="max-w-5xl mx-auto"><!-- Semester Tabs -->
+    <div class="max-w-5xl mx-auto">
      <div id="semester-tabs" class="flex justify-center gap-3 mb-6"><button onclick="selectSemester(1)" id="sem-tab-1" class="semester-tab semester-tab-active px-5 py-2 rounded-lg font-medium text-sm transition-all duration-300"> Semester 1 </button> <button onclick="selectSemester(2)" id="sem-tab-2" class="semester-tab px-5 py-2 rounded-lg font-medium text-sm bg-white/10 hover:bg-white/20 transition-all duration-300"> Semester 2 </button>
-     </div><!-- Content Area -->
-     <div id="content-area"><!-- Will be populated by JavaScript -->
+     </div>
+     <div id="content-area">
      </div>
     </div>
-   </main><!-- Footer -->
+   </main>
    <footer class="py-4 px-4 border-t border-white/10 text-center">
     <p class="text-gray-400 text-sm">Project by: <span id="dev-name" class="text-purple-300 font-semibold">Khalil Doua</span></p><a href="https://t.me/KhqLiL" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-purple-300 hover:text-purple-200 text-sm mt-1 transition-colors">
      <svg class="w-4 h-4" fill="currentColor" viewbox="0 0 24 24">
@@ -122,7 +122,6 @@
    </footer>
   </div>
   <script>
-    // Configuration
     const defaultConfig = {
       app_title: "🎓 ST ing Grade Calculator",
       developer_name: "Khalil Doua"
@@ -130,10 +129,9 @@
 
     let config = { ...defaultConfig };
 
-    // Data Structure for Subjects
     const subjectsData = {
-      1: { // Year 1
-        1: [ // Semester 1
+      1: {
+        1: [
           { name: "Physique 1", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
           { name: "Chimie 1", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
           { name: "Programmation", coef: 2, fields: ["TD"], weights: [1] },
@@ -143,7 +141,7 @@
           { name: "Les Métiers", coef: 1, fields: ["Exam"], weights: [1] },
           { name: "Éthique", coef: 1, fields: ["Exam"], weights: [1] }
         ],
-        2: [ // Semester 2
+        2: [
           { name: "Physique 2", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
           { name: "Chimie 2", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
           { name: "Programmation 2", coef: 2, fields: ["TD"], weights: [1] },
@@ -154,8 +152,8 @@
           { name: "Anglais", coef: 1, fields: ["Exam"], weights: [1] }
         ]
       },
-      2: { // Year 2
-        1: [ // Semester 3
+      2: {
+        1: [
           { name: "Analyse 3", coef: 3, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
           { name: "Analyse Numérique 1", coef: 3, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
           { name: "Ondes et Vibrations", coef: 3, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
@@ -169,14 +167,11 @@
       }
     };
 
-    // Store grades
     const grades = {};
 
-    // Current selection
     let currentYear = 1;
     let currentSemester = 1;
 
-    // Initialize grades storage
     function initGrades() {
       for (let year = 1; year <= 5; year++) {
         grades[year] = {};
@@ -186,12 +181,10 @@
       }
     }
 
-    // Select Year
     function selectYear(year) {
       currentYear = year;
       currentSemester = 1;
       
-      // Update year tabs
       document.querySelectorAll('.year-tab').forEach((tab, idx) => {
         if (idx + 1 === year) {
           tab.classList.add('tab-active');
@@ -202,18 +195,15 @@
         }
       });
 
-      // Update semester tabs
       updateSemesterTabs();
       renderContent();
     }
 
-    // Update Semester Tabs
     function updateSemesterTabs() {
       const semBase = (currentYear - 1) * 2;
       document.getElementById('sem-tab-1').textContent = `Semester ${semBase + 1}`;
       document.getElementById('sem-tab-2').textContent = `Semester ${semBase + 2}`;
       
-      // Reset active state
       document.querySelectorAll('.semester-tab').forEach((tab, idx) => {
         if (idx === 0) {
           tab.classList.add('semester-tab-active');
@@ -225,7 +215,6 @@
       });
     }
 
-    // Select Semester
     function selectSemester(sem) {
       currentSemester = sem;
       
@@ -242,7 +231,6 @@
       renderContent();
     }
 
-    // Calculate Subject Average
     function calculateSubjectAverage(year, sem, subjectIdx) {
       const subjects = subjectsData[year]?.[sem];
       if (!subjects) return null;
@@ -264,7 +252,6 @@
       return hasAnyGrade ? sum : null;
     }
 
-    // Calculate Semester Average
     function calculateSemesterAverage(year, sem) {
       const subjects = subjectsData[year]?.[sem];
       if (!subjects) return null;
@@ -291,7 +278,6 @@
         grades[currentYear][currentSemester][subjectIdx] = {};
       }
       
-      // Validate input
       let numValue = parseFloat(value);
       if (isNaN(numValue)) {
         grades[currentYear][currentSemester][subjectIdx][field] = '';
@@ -303,7 +289,6 @@
       updateAverages();
     }
 
-    // Update Averages Display
     function updateAverages() {
       const subjects = subjectsData[currentYear]?.[currentSemester];
       if (!subjects) return;
@@ -331,13 +316,11 @@
       renderContent();
     }
 
-    // Render Content
     function renderContent() {
       const contentArea = document.getElementById('content-area');
       const semBase = (currentYear - 1) * 2;
       const actualSemester = semBase + currentSemester;
       
-      // Check if data available for this year/semester
       if (currentYear === 1 || (currentYear === 2 && currentSemester === 1)) {
         renderCalculator(contentArea);
       } else {
@@ -345,21 +328,18 @@
       }
     }
 
-    // Render Calculator
     function renderCalculator(container) {
       const subjects = subjectsData[currentYear][currentSemester];
       const totalCoef = subjects.reduce((sum, s) => sum + s.coef, 0);
       
       let html = `
         <div class="space-y-4">
-          <!-- Semester Average Card -->
           <div class="result-card rounded-2xl p-6 text-center">
             <p class="text-gray-300 mb-2 text-lg font-medium">Semester Average</p>
             <p id="semester-average" class="text-4xl md:text-5xl font-bold text-gray-400">--</p>
             <p class="text-gray-400 text-sm mt-3">Total Coefficients: ${totalCoef}</p>
           </div>
 
-          <!-- Reset Button -->
           <div class="flex justify-end">
             <button onclick="resetSemester()" class="reset-btn px-4 py-2 rounded-lg text-white font-medium flex items-center gap-2">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -369,7 +349,6 @@
             </button>
           </div>
 
-          <!-- Desktop Table -->
           <div class="hidden md:block overflow-x-auto">
             <table class="w-full">
               <thead>
@@ -437,7 +416,6 @@
             </table>
           </div>
 
-          <!-- Mobile Cards -->
           <div class="md:hidden space-y-3">
       `;
 
@@ -509,7 +487,7 @@
           <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Coming Soon</h2>
           <p class="text-gray-300 mb-6 leading-relaxed">
             هذه الحاسبة غير مكتملة لهذه السنة/الموسم حالياً.<br>
-            تواصل مع المطور لإضافة مواد ومعاملات وأوزان الحساب.
+            تواصل مع المطور ل��ضافة مواد وم��املات وأوزان الحساب.
           </p>
           <div class="bg-white/10 rounded-xl p-4 inline-block">
             <p class="text-gray-400 text-sm mb-2">Developer</p>
@@ -526,7 +504,6 @@
       `;
     }
 
-    // Element SDK Integration
     function onConfigChange(newConfig) {
       document.getElementById('app-title').textContent = newConfig.app_title || defaultConfig.app_title;
       document.getElementById('dev-name').textContent = newConfig.developer_name || defaultConfig.developer_name;
@@ -548,7 +525,6 @@
       ]);
     }
 
-    // Initialize
     initGrades();
     renderContent();
 
@@ -561,5 +537,5 @@
       });
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c47c18c857bcc2b',t:'MTc2OTUxMTcyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c47d23cc47bcc2b',t:'MTc2OTUxMjQxMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
