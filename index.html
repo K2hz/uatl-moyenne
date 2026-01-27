@@ -1,1336 +1,550 @@
-<html lang="en"><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/extend-native-history-api.js"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/requests.js"></script><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UATL MOYENNE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="icon-lang.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f0f4f8;
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ST ing Grade Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    .card-gradient {
+      background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+      backdrop-filter: blur(10px);
+    }
+    .tab-active {
+      background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
+      box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+    }
+    .semester-tab-active {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+    }
+    .input-field {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      background: rgba(255,255,255,0.15);
+      border-color: #4facfe;
+      box-shadow: 0 0 15px rgba(79, 172, 254, 0.3);
+    }
+    .result-card {
+      background: linear-gradient(145deg, rgba(79, 172, 254, 0.2) 0%, rgba(0, 242, 254, 0.1) 100%);
+      border: 1px solid rgba(79, 172, 254, 0.3);
+    }
+    .subject-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+    }
+    .subject-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(79, 172, 254, 0.4);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .glow-text {
+      text-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
+    }
+    .reset-btn {
+      background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+      transition: all 0.3s ease;
+    }
+    .reset-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(255, 65, 108, 0.5);
+    }
+    .coming-soon-card {
+      background: linear-gradient(145deg, rgba(233, 69, 96, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%);
+      border: 2px dashed rgba(233, 69, 96, 0.4);
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(79, 172, 254, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(79, 172, 254, 0.6); }
+    }
+    .average-display {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    .scroll-container {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(79, 172, 254, 0.5) rgba(255,255,255,0.1);
+    }
+    .scroll-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    .scroll-container::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+    }
+    .scroll-container::-webkit-scrollbar-thumb {
+      background: rgba(79, 172, 254, 0.5);
+      border-radius: 3px;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full gradient-bg text-white overflow-auto scroll-container">
+  <div id="app" class="min-h-full flex flex-col"><!-- Header -->
+   <header class="py-6 px-4 text-center border-b border-white/10">
+    <h1 id="app-title" class="text-3xl md:text-4xl font-bold glow-text mb-2">🎓 ST ing Grade Calculator</h1>
+    <p class="text-gray-400 text-sm md:text-base">Calculate your semester averages easily</p>
+   </header><!-- Year Tabs -->
+   <nav class="px-4 py-4">
+    <div class="flex flex-wrap justify-center gap-2 md:gap-3 max-w-4xl mx-auto"><button onclick="selectYear(1)" id="year-tab-1" class="year-tab tab-active px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-300"> 1st Year </button> <button onclick="selectYear(2)" id="year-tab-2" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 2nd Year </button> <button onclick="selectYear(3)" id="year-tab-3" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 3rd Year </button> <button onclick="selectYear(4)" id="year-tab-4" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 4th Year </button> <button onclick="selectYear(5)" id="year-tab-5" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 5th Year </button>
+    </div>
+   </nav><!-- Main Content -->
+   <main class="flex-1 px-4 pb-8">
+    <div class="max-w-5xl mx-auto"><!-- Semester Tabs -->
+     <div id="semester-tabs" class="flex justify-center gap-3 mb-6"><button onclick="selectSemester(1)" id="sem-tab-1" class="semester-tab semester-tab-active px-5 py-2 rounded-lg font-medium text-sm transition-all duration-300"> Semester 1 </button> <button onclick="selectSemester(2)" id="sem-tab-2" class="semester-tab px-5 py-2 rounded-lg font-medium text-sm bg-white/10 hover:bg-white/20 transition-all duration-300"> Semester 2 </button>
+     </div><!-- Content Area -->
+     <div id="content-area"><!-- Will be populated by JavaScript -->
+     </div>
+    </div>
+   </main><!-- Footer -->
+   <footer class="py-4 px-4 border-t border-white/10 text-center">
+    <p class="text-gray-400 text-sm">Project by: <span id="dev-name" class="text-cyan-400 font-semibold">Khalil Doua</span></p><a href="https://t.me/KhqLiL" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 text-sm mt-1 transition-colors">
+     <svg class="w-4 h-4" fill="currentColor" viewbox="0 0 24 24">
+      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+     </svg> @KhqLiL </a>
+   </footer>
+  </div>
+  <script>
+    // Configuration
+    const defaultConfig = {
+      app_title: "🎓 ST ing Grade Calculator",
+      developer_name: "Khalil Doua"
+    };
+
+    let config = { ...defaultConfig };
+
+    // Data Structure for Subjects
+    const subjectsData = {
+      1: { // Year 1
+        1: [ // Semester 1
+          { name: "Physics 1 (Physique 1)", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "Chemistry 1 (Chimie 1)", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "Computer Science (Informatique)", coef: 2, fields: ["TD"], weights: [1] },
+          { name: "Algebra 1 (Algèbre 1)", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Analysis 1 (Analyse 1)", coef: 3, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Probability & Statistics", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Les Métiers", coef: 1, fields: ["Exam"], weights: [1] },
+          { name: "Ethics (Éthique)", coef: 1, fields: ["Exam"], weights: [1] }
+        ],
+        2: [ // Semester 2
+          { name: "Physics 2", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "Chemistry 2", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "Programming (Informatique 2)", coef: 2, fields: ["TD"], weights: [1] },
+          { name: "Algebra 2", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Analysis 2", coef: 3, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Dessin", coef: 2, fields: ["TP"], weights: [1] },
+          { name: "Métier", coef: 1, fields: ["Exam"], weights: [1] },
+          { name: "English (Anglais)", coef: 1, fields: ["Exam"], weights: [1] }
+        ]
+      }
+    };
+
+    // Store grades
+    const grades = {};
+
+    // Current selection
+    let currentYear = 1;
+    let currentSemester = 1;
+
+    // Initialize grades storage
+    function initGrades() {
+      for (let year = 1; year <= 5; year++) {
+        grades[year] = {};
+        for (let sem = 1; sem <= 2; sem++) {
+          grades[year][sem] = {};
         }
-        .header-gradient {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
+      }
+    }
+
+    // Select Year
+    function selectYear(year) {
+      currentYear = year;
+      currentSemester = 1;
+      
+      // Update year tabs
+      document.querySelectorAll('.year-tab').forEach((tab, idx) => {
+        if (idx + 1 === year) {
+          tab.classList.add('tab-active');
+          tab.classList.remove('bg-white/10', 'hover:bg-white/20');
+        } else {
+          tab.classList.remove('tab-active');
+          tab.classList.add('bg-white/10', 'hover:bg-white/20');
         }
-        input:focus {
-            outline: none;
-            border-color: #22c55e;
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
+      });
+
+      // Update semester tabs
+      updateSemesterTabs();
+      renderContent();
+    }
+
+    // Update Semester Tabs
+    function updateSemesterTabs() {
+      const semBase = (currentYear - 1) * 2;
+      document.getElementById('sem-tab-1').textContent = `Semester ${semBase + 1}`;
+      document.getElementById('sem-tab-2').textContent = `Semester ${semBase + 2}`;
+      
+      // Reset active state
+      document.querySelectorAll('.semester-tab').forEach((tab, idx) => {
+        if (idx === 0) {
+          tab.classList.add('semester-tab-active');
+          tab.classList.remove('bg-white/10', 'hover:bg-white/20');
+        } else {
+          tab.classList.remove('semester-tab-active');
+          tab.classList.add('bg-white/10', 'hover:bg-white/20');
         }
-        .semester-tab {
-            transition: all 0.2s ease;
+      });
+    }
+
+    // Select Semester
+    function selectSemester(sem) {
+      currentSemester = sem;
+      
+      document.querySelectorAll('.semester-tab').forEach((tab, idx) => {
+        if (idx + 1 === sem) {
+          tab.classList.add('semester-tab-active');
+          tab.classList.remove('bg-white/10', 'hover:bg-white/20');
+        } else {
+          tab.classList.remove('semester-tab-active');
+          tab.classList.add('bg-white/10', 'hover:bg-white/20');
         }
-        .semester-tab.active {
-            background-color: #16a34a !important;
-            color: white !important;
-            border-color: #16a34a !important;
+      });
+
+      renderContent();
+    }
+
+    // Calculate Subject Average
+    function calculateSubjectAverage(year, sem, subjectIdx) {
+      const subjects = subjectsData[year]?.[sem];
+      if (!subjects) return null;
+      
+      const subject = subjects[subjectIdx];
+      const subjectGrades = grades[year][sem][subjectIdx] || {};
+      
+      let sum = 0;
+      let hasAnyGrade = false;
+      
+      subject.fields.forEach((field, fieldIdx) => {
+        const grade = parseFloat(subjectGrades[field]) || 0;
+        if (subjectGrades[field] !== undefined && subjectGrades[field] !== '') {
+          hasAnyGrade = true;
         }
-        .failing-grade {
-            color: #ef4444;
-            font-weight: bold;
+        sum += grade * subject.weights[fieldIdx];
+      });
+      
+      return hasAnyGrade ? sum : null;
+    }
+
+    // Calculate Semester Average
+    function calculateSemesterAverage(year, sem) {
+      const subjects = subjectsData[year]?.[sem];
+      if (!subjects) return null;
+      
+      let totalWeighted = 0;
+      let totalCoef = 0;
+      let hasAnyGrade = false;
+      
+      subjects.forEach((subject, idx) => {
+        const avg = calculateSubjectAverage(year, sem, idx);
+        if (avg !== null) {
+          hasAnyGrade = true;
+          totalWeighted += avg * subject.coef;
+          totalCoef += subject.coef;
         }
-        .passing-grade {
-            color: #22c55e;
-            font-weight: bold;
+      });
+      
+      return hasAnyGrade && totalCoef > 0 ? totalWeighted / totalCoef : null;
+    }
+
+    // Handle Grade Input
+    function handleGradeInput(subjectIdx, field, value) {
+      if (!grades[currentYear][currentSemester][subjectIdx]) {
+        grades[currentYear][currentSemester][subjectIdx] = {};
+      }
+      
+      // Validate input
+      let numValue = parseFloat(value);
+      if (isNaN(numValue)) {
+        grades[currentYear][currentSemester][subjectIdx][field] = '';
+      } else {
+        numValue = Math.max(0, Math.min(20, numValue));
+        grades[currentYear][currentSemester][subjectIdx][field] = numValue;
+      }
+      
+      updateAverages();
+    }
+
+    // Update Averages Display
+    function updateAverages() {
+      const subjects = subjectsData[currentYear]?.[currentSemester];
+      if (!subjects) return;
+      
+      subjects.forEach((subject, idx) => {
+        const avg = calculateSubjectAverage(currentYear, currentSemester, idx);
+        const avgEl = document.getElementById(`subject-avg-${idx}`);
+        if (avgEl) {
+          avgEl.textContent = avg !== null ? avg.toFixed(2) : '--';
+          avgEl.className = avg !== null ? (avg >= 10 ? 'text-green-400 font-bold' : 'text-red-400 font-bold') : 'text-gray-400';
         }
-        .coming-soon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 300px;
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #9ca3af;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
+      });
+      
+      const semAvg = calculateSemesterAverage(currentYear, currentSemester);
+      const semAvgEl = document.getElementById('semester-average');
+      if (semAvgEl) {
+        semAvgEl.textContent = semAvg !== null ? semAvg.toFixed(2) : '--';
+        semAvgEl.className = semAvg !== null ? (semAvg >= 10 ? 'text-4xl font-bold text-green-400' : 'text-4xl font-bold text-red-400') : 'text-4xl font-bold text-gray-400';
+      }
+    }
+
+    // Reset Current Semester
+    function resetSemester() {
+      grades[currentYear][currentSemester] = {};
+      renderContent();
+    }
+
+    // Render Content
+    function renderContent() {
+      const contentArea = document.getElementById('content-area');
+      const semBase = (currentYear - 1) * 2;
+      const actualSemester = semBase + currentSemester;
+      
+      // Check if data available for this year/semester
+      if (currentYear === 1) {
+        renderCalculator(contentArea);
+      } else {
+        renderComingSoon(contentArea, actualSemester);
+      }
+    }
+
+    // Render Calculator
+    function renderCalculator(container) {
+      const subjects = subjectsData[currentYear][currentSemester];
+      const totalCoef = subjects.reduce((sum, s) => sum + s.coef, 0);
+      
+      let html = `
+        <div class="space-y-4">
+          <!-- Semester Average Card -->
+          <div class="result-card rounded-2xl p-6 text-center average-display">
+            <p class="text-gray-300 mb-2">Semester Average</p>
+            <p id="semester-average" class="text-4xl font-bold text-gray-400">--</p>
+            <p class="text-gray-400 text-sm mt-2">Total Coefficients: ${totalCoef}</p>
+          </div>
+
+          <!-- Reset Button -->
+          <div class="flex justify-end">
+            <button onclick="resetSemester()" class="reset-btn px-4 py-2 rounded-lg text-white font-medium flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              Reset
+            </button>
+          </div>
+
+          <!-- Desktop Table -->
+          <div class="hidden md:block overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-white/20">
+                  <th class="text-left py-3 px-4 text-gray-300 font-medium">Subject</th>
+                  <th class="text-center py-3 px-2 text-gray-300 font-medium">Coef</th>
+                  <th class="text-center py-3 px-2 text-gray-300 font-medium">TD</th>
+                  <th class="text-center py-3 px-2 text-gray-300 font-medium">TP</th>
+                  <th class="text-center py-3 px-2 text-gray-300 font-medium">Exam</th>
+                  <th class="text-center py-3 px-4 text-gray-300 font-medium">Average</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      subjects.forEach((subject, idx) => {
+        const subjectGrades = grades[currentYear][currentSemester][idx] || {};
+        const avg = calculateSubjectAverage(currentYear, currentSemester, idx);
+        const avgClass = avg !== null ? (avg >= 10 ? 'text-green-400 font-bold' : 'text-red-400 font-bold') : 'text-gray-400';
         
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            .mobile-subject-card {
-                border: 1px solid #e5e7eb;
-                border-radius: 0.5rem;
-                margin-bottom: 1rem;
-                background-color: white;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            }
-            
-            .mobile-subject-card .subject-header {
-                background-color: #f0fdf4;
-                padding: 0.75rem;
-                border-bottom: 1px solid #dcfce7;
-                border-radius: 0.5rem 0.5rem 0 0;
-                font-weight: 600;
-            }
-            
-            .mobile-subject-card .subject-body {
-                padding: 0.75rem;
-            }
-            
-            .mobile-subject-card .input-group {
-                margin-bottom: 0.75rem;
-            }
-            
-            .mobile-subject-card .input-group:last-child {
-                margin-bottom: 0;
-            }
-            
-            .mobile-subject-card .input-label {
-                font-size: 0.875rem;
-                color: #4b5563;
-                margin-bottom: 0.25rem;
-            }
-            
-            .mobile-subject-card .input-field {
-                width: 100%;
-                padding: 0.625rem;
-                border: 1px solid #d1d5db;
-                border-radius: 0.375rem;
-                font-size: 1rem;
-                background-color: #f9fafb;
-            }
-            
-            .mobile-subject-card .result-row {
-                display: flex;
-                justify-content: space-between;
-                padding-top: 0.75rem;
-                margin-top: 0.75rem;
-                border-top: 1px solid #e5e7eb;
-            }
-            
-            .tabs-container {
-                overflow-x: auto;
-                white-space: nowrap;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none; /* Firefox */
-                -ms-overflow-style: none; /* IE and Edge */
-            }
-            
-            .tabs-container::-webkit-scrollbar {
-                display: none; /* Chrome, Safari, Opera */
-            }
-            
-            input[type="number"] {
-                -moz-appearance: textfield;
-                appearance: textfield;
-            }
-            
-            input[type="number"]::-webkit-outer-spin-button,
-            input[type="number"]::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-            }
-        }
-    </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mt-1{margin-top:0.25rem}.mt-3{margin-top:0.75rem}.mt-8{margin-top:2rem}.flex{display:flex}.hidden{display:none}.min-h-screen{min-height:100vh}.w-full{width:100%}.border-collapse{border-collapse:collapse}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.overflow-x-auto{overflow-x:auto}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded{border-radius:0.25rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-green-100{--tw-border-opacity:1;border-color:rgb(220 252 231 / var(--tw-border-opacity, 1))}.border-green-500{--tw-border-opacity:1;border-color:rgb(34 197 94 / var(--tw-border-opacity, 1))}.bg-gray-800{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244 / var(--tw-bg-opacity, 1))}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-transparent{background-color:transparent}.p-4{padding:1rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.text-left{text-align:left}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61 / var(--tw-text-opacity, 1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.opacity-75{opacity:0.75}.opacity-80{opacity:0.8}.opacity-90{opacity:0.9}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-green-50:hover{--tw-bg-opacity:1;background-color:rgb(240 253 244 / var(--tw-bg-opacity, 1))}@media (min-width: 768px){.md\:mb-2{margin-bottom:0.5rem}.md\:mb-4{margin-bottom:1rem}.md\:mb-6{margin-bottom:1.5rem}.md\:mb-8{margin-bottom:2rem}.md\:mt-0{margin-top:0px}.md\:mt-12{margin-top:3rem}.md\:mt-2{margin-top:0.5rem}.md\:block{display:block}.md\:hidden{display:none}.md\:flex-row{flex-direction:row}.md\:justify-center{justify-content:center}.md\:p-6{padding:1.5rem}.md\:px-4{padding-left:1rem;padding-right:1rem}.md\:px-6{padding-left:1.5rem;padding-right:1.5rem}.md\:px-8{padding-left:2rem;padding-right:2rem}.md\:py-3{padding-top:0.75rem;padding-bottom:0.75rem}.md\:py-6{padding-top:1.5rem;padding-bottom:1.5rem}.md\:py-8{padding-top:2rem;padding-bottom:2rem}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}.md\:text-base{font-size:1rem;line-height:1.5rem}.md\:text-sm{font-size:0.875rem;line-height:1.25rem}.md\:text-xl{font-size:1.25rem;line-height:1.75rem}}</style><script bis_use="true" type="text/javascript" charset="utf-8" data-bis-config="[&quot;facebook.com/&quot;,&quot;twitter.com/&quot;,&quot;youtube-nocookie.com/embed/&quot;,&quot;//vk.com/&quot;,&quot;//www.vk.com/&quot;,&quot;linkedin.com/&quot;,&quot;//www.linkedin.com/&quot;,&quot;//instagram.com/&quot;,&quot;//www.instagram.com/&quot;,&quot;//www.google.com/recaptcha/api2/&quot;,&quot;//hangouts.google.com/webchat/&quot;,&quot;//www.google.com/calendar/&quot;,&quot;//www.google.com/maps/embed&quot;,&quot;spotify.com/&quot;,&quot;soundcloud.com/&quot;,&quot;//player.vimeo.com/&quot;,&quot;//disqus.com/&quot;,&quot;//tgwidget.com/&quot;,&quot;//js.driftt.com/&quot;,&quot;friends2follow.com&quot;,&quot;/widget&quot;,&quot;login&quot;,&quot;//video.bigmir.net/&quot;,&quot;blogger.com&quot;,&quot;//smartlock.google.com/&quot;,&quot;//keep.google.com/&quot;,&quot;/web.tolstoycomments.com/&quot;,&quot;moz-extension://&quot;,&quot;chrome-extension://&quot;,&quot;/auth/&quot;,&quot;//analytics.google.com/&quot;,&quot;adclarity.com&quot;,&quot;paddle.com/checkout&quot;,&quot;hcaptcha.com&quot;,&quot;recaptcha.net&quot;,&quot;2captcha.com&quot;,&quot;accounts.google.com&quot;,&quot;www.google.com/shopping/customerreviews&quot;,&quot;buy.tinypass.com&quot;,&quot;gstatic.com&quot;,&quot;secureir.ebaystatic.com&quot;,&quot;docs.google.com&quot;,&quot;contacts.google.com&quot;,&quot;github.com&quot;,&quot;mail.google.com&quot;,&quot;chat.google.com&quot;,&quot;audio.xpleer.com&quot;,&quot;keepa.com&quot;,&quot;static.xx.fbcdn.net&quot;,&quot;sas.selleramp.com&quot;,&quot;1plus1.video&quot;,&quot;console.googletagservices.com&quot;,&quot;//lnkd.demdex.net/&quot;,&quot;//radar.cedexis.com/&quot;,&quot;//li.protechts.net/&quot;,&quot;challenges.cloudflare.com/&quot;,&quot;ogs.google.com&quot;]" src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/executors/traffic.js"></script></head>
-<body class="min-h-screen" __processed_aa2f9dde-77a6-4d8a-a033-56b9426f310c__="true" bis_status="ok" bis_frame_id="1737">
-    <header class="header-gradient text-white py-4 px-4 shadow-lg">
-        <div class="container mx-auto">
-            <h1 class="text-2xl md:text-3xl font-bold text-center">UATL MOYENNE</h1>
-            <p class="text-center mt-1 opacity-90 text-sm md:text-base">Grade Calculator System</p>
-            <p class="text-center text-xs md:text-sm mt-1 opacity-75">Project by: KHALIL DOUA</p>
+        html += `
+          <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+            <td class="py-3 px-4">
+              <span class="font-medium">${subject.name}</span>
+            </td>
+            <td class="text-center py-3 px-2">
+              <span class="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-lg text-sm font-medium">${subject.coef}</span>
+            </td>
+            <td class="text-center py-3 px-2">
+              ${subject.fields.includes('TD') ? `
+                <input type="number" step="0.25" min="0" max="20" 
+                  value="${subjectGrades.TD !== undefined ? subjectGrades.TD : ''}"
+                  onchange="handleGradeInput(${idx}, 'TD', this.value)"
+                  class="input-field w-16 text-center py-1 px-2 rounded-lg text-white outline-none"
+                  placeholder="--">
+              ` : '<span class="text-gray-500">-</span>'}
+            </td>
+            <td class="text-center py-3 px-2">
+              ${subject.fields.includes('TP') ? `
+                <input type="number" step="0.25" min="0" max="20" 
+                  value="${subjectGrades.TP !== undefined ? subjectGrades.TP : ''}"
+                  onchange="handleGradeInput(${idx}, 'TP', this.value)"
+                  class="input-field w-16 text-center py-1 px-2 rounded-lg text-white outline-none"
+                  placeholder="--">
+              ` : '<span class="text-gray-500">-</span>'}
+            </td>
+            <td class="text-center py-3 px-2">
+              ${subject.fields.includes('Exam') ? `
+                <input type="number" step="0.25" min="0" max="20" 
+                  value="${subjectGrades.Exam !== undefined ? subjectGrades.Exam : ''}"
+                  onchange="handleGradeInput(${idx}, 'Exam', this.value)"
+                  class="input-field w-16 text-center py-1 px-2 rounded-lg text-white outline-none"
+                  placeholder="--">
+              ` : '<span class="text-gray-500">-</span>'}
+            </td>
+            <td class="text-center py-3 px-4">
+              <span id="subject-avg-${idx}" class="${avgClass}">${avg !== null ? avg.toFixed(2) : '--'}</span>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += `
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Cards -->
+          <div class="md:hidden space-y-3">
+      `;
+
+      subjects.forEach((subject, idx) => {
+        const subjectGrades = grades[currentYear][currentSemester][idx] || {};
+        const avg = calculateSubjectAverage(currentYear, currentSemester, idx);
+        const avgClass = avg !== null ? (avg >= 10 ? 'text-green-400 font-bold' : 'text-red-400 font-bold') : 'text-gray-400';
+        
+        html += `
+          <div class="subject-card rounded-xl p-4">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="font-semibold text-white flex-1 pr-2">${subject.name}</h3>
+              <span class="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-lg text-xs font-medium whitespace-nowrap">Coef: ${subject.coef}</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-3">
+              ${subject.fields.includes('TD') ? `
+                <div class="text-center">
+                  <label class="text-xs text-gray-400 block mb-1">TD</label>
+                  <input type="number" step="0.25" min="0" max="20" 
+                    value="${subjectGrades.TD !== undefined ? subjectGrades.TD : ''}"
+                    onchange="handleGradeInput(${idx}, 'TD', this.value)"
+                    class="input-field w-full text-center py-2 px-2 rounded-lg text-white outline-none text-sm"
+                    placeholder="--">
+                </div>
+              ` : '<div></div>'}
+              ${subject.fields.includes('TP') ? `
+                <div class="text-center">
+                  <label class="text-xs text-gray-400 block mb-1">TP</label>
+                  <input type="number" step="0.25" min="0" max="20" 
+                    value="${subjectGrades.TP !== undefined ? subjectGrades.TP : ''}"
+                    onchange="handleGradeInput(${idx}, 'TP', this.value)"
+                    class="input-field w-full text-center py-2 px-2 rounded-lg text-white outline-none text-sm"
+                    placeholder="--">
+                </div>
+              ` : '<div></div>'}
+              ${subject.fields.includes('Exam') ? `
+                <div class="text-center">
+                  <label class="text-xs text-gray-400 block mb-1">Exam</label>
+                  <input type="number" step="0.25" min="0" max="20" 
+                    value="${subjectGrades.Exam !== undefined ? subjectGrades.Exam : ''}"
+                    onchange="handleGradeInput(${idx}, 'Exam', this.value)"
+                    class="input-field w-full text-center py-2 px-2 rounded-lg text-white outline-none text-sm"
+                    placeholder="--">
+                </div>
+              ` : '<div></div>'}
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-white/10">
+              <span class="text-gray-400 text-sm">Average:</span>
+              <span id="subject-avg-${idx}" class="${avgClass} text-lg">${avg !== null ? avg.toFixed(2) : '--'}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `
+          </div>
         </div>
-    </header>
+      `;
 
-    <main class="container mx-auto py-4 md:py-8 px-3 md:px-4">
-        <!-- Semester Tabs -->
-        <div class="tabs-container mb-4 md:mb-6">
-            <div class="flex gap-2 md:justify-center">
-                <button class="semester-tab active px-4 py-2 md:px-6 md:py-3 rounded-lg bg-white border-2 border-green-500 text-green-700 font-medium hover:bg-green-50 text-sm md:text-base" data-semester="1">
-                    Semester 1
-                </button>
-                <button class="semester-tab px-4 py-2 md:px-6 md:py-3 rounded-lg bg-white border-2 border-green-500 text-green-700 font-medium hover:bg-green-50 text-sm md:text-base" data-semester="2">
-                    Semester 2
-                </button>
-                <button class="semester-tab px-4 py-2 md:px-6 md:py-3 rounded-lg bg-white border-2 border-green-500 text-green-700 font-medium hover:bg-green-50 text-sm md:text-base" data-semester="3">
-                    Semester 3
-                </button>
-                <button class="semester-tab px-4 py-2 md:px-6 md:py-3 rounded-lg bg-white border-2 border-green-500 text-green-700 font-medium hover:bg-green-50 text-sm md:text-base" data-semester="4">
-                    Semester 4
-                </button>
-            </div>
+      container.innerHTML = html;
+      updateAverages();
+    }
+
+    // Render Coming Soon
+    function renderComingSoon(container, semesterNum) {
+      container.innerHTML = `
+        <div class="coming-soon-card rounded-2xl p-8 md:p-12 text-center max-w-2xl mx-auto">
+          <div class="text-6xl mb-6">🚧</div>
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Coming Soon</h2>
+          <p class="text-gray-300 mb-6 leading-relaxed">
+            هذه الحاسبة غير مكتملة لهذه السنة/الموسم حالياً.<br>
+            تواصل مع المطور لإضافة مواد ومعاملات وأوزان الحساب.
+          </p>
+          <div class="bg-white/10 rounded-xl p-4 inline-block">
+            <p class="text-gray-400 text-sm mb-2">Developer</p>
+            <p class="text-white font-semibold">Khalil Doua</p>
+            <a href="https://t.me/KhqLiL" target="_blank" rel="noopener noreferrer" 
+               class="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mt-2 transition-colors">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+              </svg>
+              @KhqLiL
+            </a>
+          </div>
         </div>
+      `;
+    }
 
-        <div id="semesterContent">
-            <div id="semester1Content" class="semester-content">
-                <div class="bg-white rounded-xl shadow-md p-4 md:p-6 mb-4 md:mb-8">
-                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-2 md:mb-4">
-                        Subject Grades
-                    </h2>
-                    <p class="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">
-                        Enter your grades for each subject to automatically calculate your semester average.
-                    </p>
-                    
-                    <!-- Desktop view (hidden on mobile) -->
-                    <div class="hidden md:block overflow-x-auto">
-                        <table class="w-full border-collapse">
-                            <thead>
-                                <tr class="bg-green-50">
-                                    <th class="border border-green-100 px-4 py-3 text-left text-green-800">Subject</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">TD</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">TP</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Exam</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Average</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Coefficient</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Weighted</th>
-                                </tr>
-                            </thead>
-                            <tbody id="subjectsTable"><tr class="border-b hover:bg-green-50 transition-colors" data-td-weight="0.2" data-tp-weight="0.2" data-exam-weight="0.6" data-subject-name="Physics 1 (Physique 1)">
-                <td class="border border-green-100 px-4 py-3">
-                    <input type="text" value="Physics 1 (Physique 1)" class="w-full bg-transparent py-1 px-2" readonly="">
-                </td>
-            
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input td-grade" placeholder="0-20">
-                    </td>
-                
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input tp-grade" placeholder="0-20">
-                    </td>
-                
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input exam-grade" placeholder="0-20">
-                    </td>
-                
-                <td class="border border-green-100 px-4 py-3 text-center font-medium subject-average">-</td>
-                <td class="border border-green-100 px-4 py-3 text-center bg-gray-50">
-                    <input type="number" value="4" class="w-full text-center bg-transparent py-1 px-2" readonly="">
-                </td>
-                <td class="border border-green-100 px-4 py-3 text-center font-medium weighted-average">-</td>
-            </tr><tr class="border-b hover:bg-green-50 transition-colors" data-td-weight="0.2" data-tp-weight="0.2" data-exam-weight="0.6" data-subject-name="Chemistry 1 (Chimie 1)">
-                <td class="border border-green-100 px-4 py-3">
-                    <input type="text" value="Chemistry 1 (Chimie 1)" class="w-full bg-transparent py-1 px-2" readonly="">
-                </td>
-            
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input td-grade" placeholder="0-20">
-                    </td>
-                
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input tp-grade" placeholder="0-20">
-                    </td>
-                
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input exam-grade" placeholder="0-20">
-                    </td>
-                
-                <td class="border border-green-100 px-4 py-3 text-center font-medium subject-average">-</td>
-                <td class="border border-green-100 px-4 py-3 text-center bg-gray-50">
-                    <input type="number" value="4" class="w-full text-center bg-transparent py-1 px-2" readonly="">
-                </td>
-                <td class="border border-green-100 px-4 py-3 text-center font-medium weighted-average">-</td>
-            </tr><tr class="border-b hover:bg-green-50 transition-colors" data-td-weight="1" data-tp-weight="0" data-exam-weight="0" data-subject-name="Computer Science (Informatique)">
-                <td class="border border-green-100 px-4 py-3">
-                    <input type="text" value="Computer Science (Informatique)" class="w-full bg-transparent py-1 px-2" readonly="">
-                </td>
-            
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input td-grade" placeholder="0-20">
-                    </td>
-                
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                
-                <td class="border border-green-100 px-4 py-3 text-center font-medium subject-average">-</td>
-                <td class="border border-green-100 px-4 py-3 text-center bg-gray-50">
-                    <input type="number" value="2" class="w-full text-center bg-transparent py-1 px-2" readonly="">
-                </td>
-                <td class="border border-green-100 px-4 py-3 text-center font-medium weighted-average">-</td>
-            </tr><tr class="border-b hover:bg-green-50 transition-colors" data-td-weight="0.4" data-tp-weight="0" data-exam-weight="0.6" data-subject-name="Algebra 1 (Algèbre 1)">
-                <td class="border border-green-100 px-4 py-3">
-                    <input type="text" value="Algebra 1 (Algèbre 1)" class="w-full bg-transparent py-1 px-2" readonly="">
-                </td>
-            
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input td-grade" placeholder="0-20">
-                    </td>
-                
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input exam-grade" placeholder="0-20">
-                    </td>
-                
-                <td class="border border-green-100 px-4 py-3 text-center font-medium subject-average">-</td>
-                <td class="border border-green-100 px-4 py-3 text-center bg-gray-50">
-                    <input type="number" value="2" class="w-full text-center bg-transparent py-1 px-2" readonly="">
-                </td>
-                <td class="border border-green-100 px-4 py-3 text-center font-medium weighted-average">-</td>
-            </tr><tr class="border-b hover:bg-green-50 transition-colors" data-td-weight="0.4" data-tp-weight="0" data-exam-weight="0.6" data-subject-name="Analysis 1 (Analyse 1)">
-                <td class="border border-green-100 px-4 py-3">
-                    <input type="text" value="Analysis 1 (Analyse 1)" class="w-full bg-transparent py-1 px-2" readonly="">
-                </td>
-            
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input td-grade" placeholder="0-20">
-                    </td>
-                
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input exam-grade" placeholder="0-20">
-                    </td>
-                
-                <td class="border border-green-100 px-4 py-3 text-center font-medium subject-average">-</td>
-                <td class="border border-green-100 px-4 py-3 text-center bg-gray-50">
-                    <input type="number" value="3" class="w-full text-center bg-transparent py-1 px-2" readonly="">
-                </td>
-                <td class="border border-green-100 px-4 py-3 text-center font-medium weighted-average">-</td>
-            </tr><tr class="border-b hover:bg-green-50 transition-colors" data-td-weight="0.4" data-tp-weight="0" data-exam-weight="0.6" data-subject-name="Probability &amp; Statistics (Proba Stat)">
-                <td class="border border-green-100 px-4 py-3">
-                    <input type="text" value="Probability &amp; Statistics (Proba Stat)" class="w-full bg-transparent py-1 px-2" readonly="">
-                </td>
-            
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input td-grade" placeholder="0-20">
-                    </td>
-                
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input exam-grade" placeholder="0-20">
-                    </td>
-                
-                <td class="border border-green-100 px-4 py-3 text-center font-medium subject-average">-</td>
-                <td class="border border-green-100 px-4 py-3 text-center bg-gray-50">
-                    <input type="number" value="2" class="w-full text-center bg-transparent py-1 px-2" readonly="">
-                </td>
-                <td class="border border-green-100 px-4 py-3 text-center font-medium weighted-average">-</td>
-            </tr><tr class="border-b hover:bg-green-50 transition-colors" data-td-weight="0" data-tp-weight="0" data-exam-weight="1" data-subject-name="English (Anglais)">
-                <td class="border border-green-100 px-4 py-3">
-                    <input type="text" value="English (Anglais)" class="w-full bg-transparent py-1 px-2" readonly="">
-                </td>
-            
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input exam-grade" placeholder="0-20">
-                    </td>
-                
-                <td class="border border-green-100 px-4 py-3 text-center font-medium subject-average">-</td>
-                <td class="border border-green-100 px-4 py-3 text-center bg-gray-50">
-                    <input type="number" value="1" class="w-full text-center bg-transparent py-1 px-2" readonly="">
-                </td>
-                <td class="border border-green-100 px-4 py-3 text-center font-medium weighted-average">-</td>
-            </tr><tr class="border-b hover:bg-green-50 transition-colors" data-td-weight="0" data-tp-weight="0" data-exam-weight="1" data-subject-name="Ethics (Éthique)">
-                <td class="border border-green-100 px-4 py-3">
-                    <input type="text" value="Ethics (Éthique)" class="w-full bg-transparent py-1 px-2" readonly="">
-                </td>
-            
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input exam-grade" placeholder="0-20">
-                    </td>
-                
-                <td class="border border-green-100 px-4 py-3 text-center font-medium subject-average">-</td>
-                <td class="border border-green-100 px-4 py-3 text-center bg-gray-50">
-                    <input type="number" value="1" class="w-full text-center bg-transparent py-1 px-2" readonly="">
-                </td>
-                <td class="border border-green-100 px-4 py-3 text-center font-medium weighted-average">-</td>
-            </tr></tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Mobile view (hidden on desktop) -->
-                    <div class="md:hidden" id="mobileSubjects1"><div class="mobile-subject-card" data-subject-name="Physics 1 (Physique 1)" data-semester="1" data-td-weight="0.2" data-tp-weight="0.2" data-exam-weight="0.6">
-                <div class="subject-header flex justify-between items-center">
-                    <div>Physics 1 (Physique 1)</div>
-                    <div class="text-gray-500 text-sm">Coef: 4</div>
-                </div>
-                <div class="subject-body">
-            
-                    <div class="input-group">
-                        <div class="input-label">TD Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-td-grade" placeholder="Enter TD grade">
-                    </div>
-                
-                    <div class="input-group">
-                        <div class="input-label">TP Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-tp-grade" placeholder="Enter TP grade">
-                    </div>
-                
-                    <div class="input-group">
-                        <div class="input-label">Exam Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-exam-grade" placeholder="Enter exam grade">
-                    </div>
-                
-                    <div class="result-row">
-                        <div>
-                            <div class="text-sm text-gray-500">Average</div>
-                            <div class="font-medium mobile-subject-average">-</div>
-                        </div>
-                        <div>
-                            <div class="text-sm text-gray-500">Weighted</div>
-                            <div class="font-medium mobile-weighted-average">-</div>
-                        </div>
-                    </div>
-                </div>
-            </div><div class="mobile-subject-card" data-subject-name="Chemistry 1 (Chimie 1)" data-semester="1" data-td-weight="0.2" data-tp-weight="0.2" data-exam-weight="0.6">
-                <div class="subject-header flex justify-between items-center">
-                    <div>Chemistry 1 (Chimie 1)</div>
-                    <div class="text-gray-500 text-sm">Coef: 4</div>
-                </div>
-                <div class="subject-body">
-            
-                    <div class="input-group">
-                        <div class="input-label">TD Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-td-grade" placeholder="Enter TD grade">
-                    </div>
-                
-                    <div class="input-group">
-                        <div class="input-label">TP Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-tp-grade" placeholder="Enter TP grade">
-                    </div>
-                
-                    <div class="input-group">
-                        <div class="input-label">Exam Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-exam-grade" placeholder="Enter exam grade">
-                    </div>
-                
-                    <div class="result-row">
-                        <div>
-                            <div class="text-sm text-gray-500">Average</div>
-                            <div class="font-medium mobile-subject-average">-</div>
-                        </div>
-                        <div>
-                            <div class="text-sm text-gray-500">Weighted</div>
-                            <div class="font-medium mobile-weighted-average">-</div>
-                        </div>
-                    </div>
-                </div>
-            </div><div class="mobile-subject-card" data-subject-name="Computer Science (Informatique)" data-semester="1" data-td-weight="1" data-tp-weight="0" data-exam-weight="0">
-                <div class="subject-header flex justify-between items-center">
-                    <div>Computer Science (Informatique)</div>
-                    <div class="text-gray-500 text-sm">Coef: 2</div>
-                </div>
-                <div class="subject-body">
-            
-                    <div class="input-group">
-                        <div class="input-label">TD Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-td-grade" placeholder="Enter TD grade">
-                    </div>
-                
-                    <div class="result-row">
-                        <div>
-                            <div class="text-sm text-gray-500">Average</div>
-                            <div class="font-medium mobile-subject-average">-</div>
-                        </div>
-                        <div>
-                            <div class="text-sm text-gray-500">Weighted</div>
-                            <div class="font-medium mobile-weighted-average">-</div>
-                        </div>
-                    </div>
-                </div>
-            </div><div class="mobile-subject-card" data-subject-name="Algebra 1 (Algèbre 1)" data-semester="1" data-td-weight="0.4" data-tp-weight="0" data-exam-weight="0.6">
-                <div class="subject-header flex justify-between items-center">
-                    <div>Algebra 1 (Algèbre 1)</div>
-                    <div class="text-gray-500 text-sm">Coef: 2</div>
-                </div>
-                <div class="subject-body">
-            
-                    <div class="input-group">
-                        <div class="input-label">TD Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-td-grade" placeholder="Enter TD grade">
-                    </div>
-                
-                    <div class="input-group">
-                        <div class="input-label">Exam Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-exam-grade" placeholder="Enter exam grade">
-                    </div>
-                
-                    <div class="result-row">
-                        <div>
-                            <div class="text-sm text-gray-500">Average</div>
-                            <div class="font-medium mobile-subject-average">-</div>
-                        </div>
-                        <div>
-                            <div class="text-sm text-gray-500">Weighted</div>
-                            <div class="font-medium mobile-weighted-average">-</div>
-                        </div>
-                    </div>
-                </div>
-            </div><div class="mobile-subject-card" data-subject-name="Analysis 1 (Analyse 1)" data-semester="1" data-td-weight="0.4" data-tp-weight="0" data-exam-weight="0.6">
-                <div class="subject-header flex justify-between items-center">
-                    <div>Analysis 1 (Analyse 1)</div>
-                    <div class="text-gray-500 text-sm">Coef: 3</div>
-                </div>
-                <div class="subject-body">
-            
-                    <div class="input-group">
-                        <div class="input-label">TD Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-td-grade" placeholder="Enter TD grade">
-                    </div>
-                
-                    <div class="input-group">
-                        <div class="input-label">Exam Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-exam-grade" placeholder="Enter exam grade">
-                    </div>
-                
-                    <div class="result-row">
-                        <div>
-                            <div class="text-sm text-gray-500">Average</div>
-                            <div class="font-medium mobile-subject-average">-</div>
-                        </div>
-                        <div>
-                            <div class="text-sm text-gray-500">Weighted</div>
-                            <div class="font-medium mobile-weighted-average">-</div>
-                        </div>
-                    </div>
-                </div>
-            </div><div class="mobile-subject-card" data-subject-name="Probability &amp; Statistics (Proba Stat)" data-semester="1" data-td-weight="0.4" data-tp-weight="0" data-exam-weight="0.6">
-                <div class="subject-header flex justify-between items-center">
-                    <div>Probability &amp; Statistics (Proba Stat)</div>
-                    <div class="text-gray-500 text-sm">Coef: 2</div>
-                </div>
-                <div class="subject-body">
-            
-                    <div class="input-group">
-                        <div class="input-label">TD Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-td-grade" placeholder="Enter TD grade">
-                    </div>
-                
-                    <div class="input-group">
-                        <div class="input-label">Exam Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-exam-grade" placeholder="Enter exam grade">
-                    </div>
-                
-                    <div class="result-row">
-                        <div>
-                            <div class="text-sm text-gray-500">Average</div>
-                            <div class="font-medium mobile-subject-average">-</div>
-                        </div>
-                        <div>
-                            <div class="text-sm text-gray-500">Weighted</div>
-                            <div class="font-medium mobile-weighted-average">-</div>
-                        </div>
-                    </div>
-                </div>
-            </div><div class="mobile-subject-card" data-subject-name="English (Anglais)" data-semester="1" data-td-weight="0" data-tp-weight="0" data-exam-weight="1">
-                <div class="subject-header flex justify-between items-center">
-                    <div>English (Anglais)</div>
-                    <div class="text-gray-500 text-sm">Coef: 1</div>
-                </div>
-                <div class="subject-body">
-            
-                    <div class="input-group">
-                        <div class="input-label">Exam Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-exam-grade" placeholder="Enter exam grade">
-                    </div>
-                
-                    <div class="result-row">
-                        <div>
-                            <div class="text-sm text-gray-500">Average</div>
-                            <div class="font-medium mobile-subject-average">-</div>
-                        </div>
-                        <div>
-                            <div class="text-sm text-gray-500">Weighted</div>
-                            <div class="font-medium mobile-weighted-average">-</div>
-                        </div>
-                    </div>
-                </div>
-            </div><div class="mobile-subject-card" data-subject-name="Ethics (Éthique)" data-semester="1" data-td-weight="0" data-tp-weight="0" data-exam-weight="1">
-                <div class="subject-header flex justify-between items-center">
-                    <div>Ethics (Éthique)</div>
-                    <div class="text-gray-500 text-sm">Coef: 1</div>
-                </div>
-                <div class="subject-body">
-            
-                    <div class="input-group">
-                        <div class="input-label">Exam Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-exam-grade" placeholder="Enter exam grade">
-                    </div>
-                
-                    <div class="result-row">
-                        <div>
-                            <div class="text-sm text-gray-500">Average</div>
-                            <div class="font-medium mobile-subject-average">-</div>
-                        </div>
-                        <div>
-                            <div class="text-sm text-gray-500">Weighted</div>
-                            <div class="font-medium mobile-weighted-average">-</div>
-                        </div>
-                    </div>
-                </div>
-            </div></div>
-                </div>
+    // Element SDK Integration
+    function onConfigChange(newConfig) {
+      document.getElementById('app-title').textContent = newConfig.app_title || defaultConfig.app_title;
+      document.getElementById('dev-name').textContent = newConfig.developer_name || defaultConfig.developer_name;
+    }
 
-                <div class="bg-green-600 text-white rounded-xl shadow-md p-4 md:p-6">
-                    <div class="flex flex-col md:flex-row justify-between items-center">
-                        <div>
-                            <h2 class="text-lg md:text-xl font-semibold mb-1 md:mb-2">
-                                Semester Average
-                            </h2>
-                            <p class="opacity-80 text-sm md:text-base">
-                                Your calculated semester average
-                            </p>
-                        </div>
-                        <div class="mt-3 md:mt-0 text-center">
-                            <div class="bg-white rounded-lg py-2 px-6 md:py-3 md:px-8 text-2xl md:text-3xl font-bold text-red-600" id="semesterAverage">0.00</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
 
-            <div id="semester2Content" class="semester-content hidden">
-                <!-- Same structure as semester 1 -->
-                <div class="bg-white rounded-xl shadow-md p-4 md:p-6 mb-4 md:mb-8">
-                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-2 md:mb-4">
-                        Subject Grades
-                    </h2>
-                    <p class="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">
-                        Enter your grades for each subject to automatically calculate your semester average.
-                    </p>
-                    
-                    <!-- Desktop view (hidden on mobile) -->
-                    <div class="hidden md:block overflow-x-auto">
-                        <table class="w-full border-collapse">
-                            <thead>
-                                <tr class="bg-green-50">
-                                    <th class="border border-green-100 px-4 py-3 text-left text-green-800">Subject</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">TD</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">TP</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Exam</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Average</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Coefficient</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Weighted</th>
-                                </tr>
-                            </thead>
-                            <tbody id="subjectsTable2">
-                                <!-- Subjects will be added here -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Mobile view (hidden on desktop) -->
-                    <div class="md:hidden" id="mobileSubjects2">
-                        <!-- Mobile subjects will be added here -->
-                    </div>
-                </div>
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ["app_title", cfg.app_title || defaultConfig.app_title],
+        ["developer_name", cfg.developer_name || defaultConfig.developer_name]
+      ]);
+    }
 
-                <div class="bg-green-600 text-white rounded-xl shadow-md p-4 md:p-6">
-                    <div class="flex flex-col md:flex-row justify-between items-center">
-                        <div>
-                            <h2 class="text-lg md:text-xl font-semibold mb-1 md:mb-2">
-                                Semester Average
-                            </h2>
-                            <p class="opacity-80 text-sm md:text-base">
-                                Your calculated semester average
-                            </p>
-                        </div>
-                        <div class="mt-3 md:mt-0 text-center">
-                            <div class="bg-white rounded-lg py-2 px-6 md:py-3 md:px-8 text-2xl md:text-3xl font-bold" id="semesterAverage2">0.00</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    // Initialize
+    initGrades();
+    renderContent();
 
-            <div id="semester3Content" class="semester-content hidden">
-                <div class="bg-white rounded-xl shadow-md p-4 md:p-6 mb-4 md:mb-8">
-                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-2 md:mb-4">
-                        Subject Grades
-                    </h2>
-                    <p class="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">
-                        Enter your grades for each subject to automatically calculate your semester average.
-                    </p>
-                    
-                    <!-- Desktop view (hidden on mobile) -->
-                    <div class="hidden md:block overflow-x-auto">
-                        <table class="w-full border-collapse">
-                            <thead>
-                                <tr class="bg-green-50">
-                                    <th class="border border-green-100 px-4 py-3 text-left text-green-800">Subject</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">TD</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">TP</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Exam</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Average</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Coefficient</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Weighted</th>
-                                </tr>
-                            </thead>
-                            <tbody id="subjectsTable3">
-                                <!-- Subjects will be added here -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Mobile view (hidden on desktop) -->
-                    <div class="md:hidden" id="mobileSubjects3">
-                        <!-- Mobile subjects will be added here -->
-                    </div>
-                </div>
-
-                <div class="bg-green-600 text-white rounded-xl shadow-md p-4 md:p-6">
-                    <div class="flex flex-col md:flex-row justify-between items-center">
-                        <div>
-                            <h2 class="text-lg md:text-xl font-semibold mb-1 md:mb-2">
-                                Semester Average
-                            </h2>
-                            <p class="opacity-80 text-sm md:text-base">
-                                Your calculated semester average
-                            </p>
-                        </div>
-                        <div class="mt-3 md:mt-0 text-center">
-                            <div class="bg-white rounded-lg py-2 px-6 md:py-3 md:px-8 text-2xl md:text-3xl font-bold" id="semesterAverage3">0.00</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="semester4Content" class="semester-content hidden">
-                <div class="bg-white rounded-xl shadow-md p-4 md:p-6 mb-4 md:mb-8">
-                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-2 md:mb-4">
-                        Subject Grades
-                    </h2>
-                    <p class="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">
-                        Enter your grades for each subject to automatically calculate your semester average.
-                    </p>
-                    
-                    <!-- Desktop view (hidden on mobile) -->
-                    <div class="hidden md:block overflow-x-auto">
-                        <table class="w-full border-collapse">
-                            <thead>
-                                <tr class="bg-green-50">
-                                    <th class="border border-green-100 px-4 py-3 text-left text-green-800">Subject</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">TD</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">TP</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Exam</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Average</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Coefficient</th>
-                                    <th class="border border-green-100 px-4 py-3 text-center text-green-800">Weighted</th>
-                                </tr>
-                            </thead>
-                            <tbody id="subjectsTable4">
-                                <!-- Subjects will be added here -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Mobile view (hidden on desktop) -->
-                    <div class="md:hidden" id="mobileSubjects4">
-                        <!-- Mobile subjects will be added here -->
-                    </div>
-                </div>
-
-                <div class="bg-green-600 text-white rounded-xl shadow-md p-4 md:p-6">
-                    <div class="flex flex-col md:flex-row justify-between items-center">
-                        <div>
-                            <h2 class="text-lg md:text-xl font-semibold mb-1 md:mb-2">
-                                Semester Average
-                            </h2>
-                            <p class="opacity-80 text-sm md:text-base">
-                                Your calculated semester average
-                            </p>
-                        </div>
-                        <div class="mt-3 md:mt-0 text-center">
-                            <div class="bg-white rounded-lg py-2 px-6 md:py-3 md:px-8 text-2xl md:text-3xl font-bold" id="semesterAverage4">0.00</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="bg-gray-800 text-white py-4 md:py-6 mt-8 md:mt-12">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-sm md:text-base">UATL MOYENNE - Grade Calculator</p>
-            <p class="text-lg md:text-xl font-bold mt-1 md:mt-2">© 2025 KHALIL DOUA</p>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Define all semesters and their subjects
-            const allSemesters = {
-                1: [
-                    { name: "Physics 1 (Physique 1)", hasTD: true, hasTP: true, hasExam: true, coef: 4, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                    { name: "Chemistry 1 (Chimie 1)", hasTD: true, hasTP: true, hasExam: true, coef: 4, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                    { name: "Computer Science (Informatique)", hasTD: true, hasTP: false, hasExam: false, coef: 2, tdWeight: 1, tpWeight: 0, examWeight: 0 },
-                    { name: "Algebra 1 (Algèbre 1)", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                    { name: "Analysis 1 (Analyse 1)", hasTD: true, hasTP: false, hasExam: true, coef: 3, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                    { name: "Probability & Statistics (Proba Stat)", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                    { name: "English (Anglais)", hasTD: false, hasTP: false, hasExam: true, coef: 1, tdWeight: 0, tpWeight: 0, examWeight: 1.0 },
-                    { name: "Ethics (Éthique)", hasTD: false, hasTP: false, hasExam: true, coef: 1, tdWeight: 0, tpWeight: 0, examWeight: 1.0 }
-                ],
-                2: [
-                    { name: "Physics 2", hasTD: true, hasTP: true, hasExam: true, coef: 4, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                    { name: "Chemistry 2", hasTD: true, hasTP: true, hasExam: true, coef: 4, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                    { name: "Programming (Informatique 2)", hasTD: true, hasTP: false, hasExam: false, coef: 2, tdWeight: 1, tpWeight: 0, examWeight: 0 },
-                    { name: "Algebra 2", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                    { name: "Analysis 2", hasTD: true, hasTP: false, hasExam: true, coef: 3, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                    { name: "Dessin", hasTD: false, hasTP: true, hasExam: false, coef: 2, tdWeight: 0, tpWeight: 1, examWeight: 0 },
-                    { name: "Métier", hasTD: false, hasTP: false, hasExam: true, coef: 1, tdWeight: 0, tpWeight: 0, examWeight: 1 },
-                    { name: "English (Anglais)", hasTD: false, hasTP: false, hasExam: true, coef: 1, tdWeight: 0, tpWeight: 0, examWeight: 1.0 }
-                ],
-                3: [
-                    { name: "Analysis 3 (Analyse 3)", hasTD: true, hasTP: false, hasExam: true, coef: 3, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                    { name: "Numerical Analysis 1 (Analyse Numérique 1)", hasTD: true, hasTP: true, hasExam: true, coef: 3, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                    { name: "Waves and Vibrations (Ondes et Vibrations)", hasTD: true, hasTP: true, hasExam: true, coef: 3, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                    { name: "Fluid Mechanics (Mécanique des Fluides)", hasTD: true, hasTP: true, hasExam: true, coef: 4, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                    { name: "Rational Mechanics (Mécanique Rationnelle)", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                    { name: "Computer Science 3 (Informatique 3)", hasTD: false, hasTP: true, hasExam: true, coef: 2, tdWeight: 0, tpWeight: 0.4, examWeight: 0.6 },
-                    { name: "Computer-Aided Design (Conception Assistée par PC)", hasTD: false, hasTP: true, hasExam: false, coef: 1, tdWeight: 0, tpWeight: 1, examWeight: 0 },
-                    { name: "English (Anglais)", hasTD: true, hasTP: false, hasExam: false, coef: 1, tdWeight: 1, tpWeight: 0, examWeight: 0 }
-                ],
-                4: [
-                    { name: "Numerical Analysis 2 (Analyse Numérique 2)", hasTD: true, hasTP: true, hasExam: true, coef: 3, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                    { name: "Strength of Materials (Résistance des Matériaux)", hasTD: true, hasTP: true, hasExam: true, coef: 3, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                    { name: "Fundamental Electronics (Électronique Fondamentale)", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                    { name: "Fundamental Electricity (Électricité Fondamentale)", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                    { name: "Measurement and Metrology (Mesure et Métrologie)", hasTD: false, hasTP: true, hasExam: true, coef: 2, tdWeight: 0, tpWeight: 0.4, examWeight: 0.6 },
-                    { name: "Computer Science 4 (Informatique 4)", hasTD: false, hasTP: true, hasExam: true, coef: 2, tdWeight: 0, tpWeight: 0.4, examWeight: 0.6 },
-                    { name: "Computer-Aided Design 2 (Conception Assistée par PC 2)", hasTD: false, hasTP: true, hasExam: false, coef: 2, tdWeight: 0, tpWeight: 1, examWeight: 0 },
-                    { name: "Expression Techniques (Techniques d'Expression)", hasTD: true, hasTP: false, hasExam: false, coef: 1, tdWeight: 1, tpWeight: 0, examWeight: 0 }
-                ]
-            };
-            
-            // Load first semester by default
-            loadSemester(1);
-            
-            // Add event listeners to semester tabs
-            document.querySelectorAll('.semester-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Remove active class from all tabs
-                    document.querySelectorAll('.semester-tab').forEach(t => {
-                        t.classList.remove('active');
-                    });
-                    
-                    // Add active class to clicked tab
-                    this.classList.add('active');
-                    
-                    // Hide all semester content
-                    document.querySelectorAll('.semester-content').forEach(content => {
-                        content.classList.add('hidden');
-                    });
-                    
-                    // Load the selected semester
-                    const semester = parseInt(this.getAttribute('data-semester'));
-                    document.getElementById(`semester${semester}Content`).classList.remove('hidden');
-                    
-                    loadSemester(semester);
-                });
-            });
-        });
-        
-        function loadSemester(semesterNum) {
-            // Clear the tables
-            const tbody = document.getElementById(`subjectsTable${semesterNum === 1 ? '' : semesterNum}`);
-            tbody.innerHTML = '';
-            
-            // Clear the mobile view
-            const mobileContainer = document.getElementById(`mobileSubjects${semesterNum}`);
-            mobileContainer.innerHTML = '';
-            
-            // Get subjects for this semester
-            const subjects = allSemesters[semesterNum];
-            
-            // Add subjects to the table and mobile view
-            subjects.forEach(subject => {
-                addSubjectRow(subject, semesterNum);
-                addMobileSubjectCard(subject, semesterNum);
-            });
-            
-            // Calculate initial averages
-            calculateSemesterAverage(semesterNum);
-        }
-        
-        function addSubjectRow(subject, semesterNum) {
-            const tbody = document.getElementById(`subjectsTable${semesterNum === 1 ? '' : semesterNum}`);
-            const newRow = document.createElement('tr');
-            newRow.className = 'border-b hover:bg-green-50 transition-colors';
-            newRow.dataset.tdWeight = subject.tdWeight;
-            newRow.dataset.tpWeight = subject.tpWeight;
-            newRow.dataset.examWeight = subject.examWeight;
-            newRow.dataset.subjectName = subject.name;
-            
-            // Create the subject name cell
-            let rowHTML = `
-                <td class="border border-green-100 px-4 py-3">
-                    <input type="text" value="${subject.name}" class="w-full bg-transparent py-1 px-2" readonly>
-                </td>
-            `;
-            
-            // TD cell - show only if subject has TD
-            if (subject.hasTD) {
-                rowHTML += `
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input td-grade" placeholder="0-20">
-                    </td>
-                `;
-            } else {
-                rowHTML += `
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                `;
-            }
-            
-            // TP cell - show only if subject has TP
-            if (subject.hasTP) {
-                rowHTML += `
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input tp-grade" placeholder="0-20">
-                    </td>
-                `;
-            } else {
-                rowHTML += `
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                `;
-            }
-            
-            // Exam cell - show only if subject has Exam
-            if (subject.hasExam) {
-                rowHTML += `
-                    <td class="border border-green-100 px-4 py-3">
-                        <input type="number" min="0" max="20" step="0.25" class="w-full text-center bg-green-50 border rounded py-1 px-2 grade-input exam-grade" placeholder="0-20">
-                    </td>
-                `;
-            } else {
-                rowHTML += `
-                    <td class="border border-green-100 px-4 py-3 bg-gray-100 text-center text-gray-500">N/A</td>
-                `;
-            }
-            
-            // Add the remaining cells
-            rowHTML += `
-                <td class="border border-green-100 px-4 py-3 text-center font-medium subject-average">-</td>
-                <td class="border border-green-100 px-4 py-3 text-center bg-gray-50">
-                    <input type="number" value="${subject.coef}" class="w-full text-center bg-transparent py-1 px-2" readonly>
-                </td>
-                <td class="border border-green-100 px-4 py-3 text-center font-medium weighted-average">-</td>
-            `;
-            
-            newRow.innerHTML = rowHTML;
-            tbody.appendChild(newRow);
-            
-            // Add event listeners to new inputs
-            const inputs = newRow.querySelectorAll('input:not([readonly])');
-            inputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    calculateSubjectAverage(newRow, semesterNum);
-                    
-                    // Also update the mobile view
-                    const mobileCard = document.querySelector(`.mobile-subject-card[data-subject-name="${subject.name}"][data-semester="${semesterNum}"]`);
-                    if (mobileCard) {
-                        updateMobileCardFromDesktop(newRow, mobileCard);
-                    }
-                });
-            });
-        }
-        
-        function addMobileSubjectCard(subject, semesterNum) {
-            const mobileContainer = document.getElementById(`mobileSubjects${semesterNum}`);
-            const card = document.createElement('div');
-            card.className = 'mobile-subject-card';
-            card.dataset.subjectName = subject.name;
-            card.dataset.semester = semesterNum;
-            card.dataset.tdWeight = subject.tdWeight;
-            card.dataset.tpWeight = subject.tpWeight;
-            card.dataset.examWeight = subject.examWeight;
-            
-            let cardHTML = `
-                <div class="subject-header flex justify-between items-center">
-                    <div>${subject.name}</div>
-                    <div class="text-gray-500 text-sm">Coef: ${subject.coef}</div>
-                </div>
-                <div class="subject-body">
-            `;
-            
-            // Add input fields based on what the subject has
-            if (subject.hasTD) {
-                cardHTML += `
-                    <div class="input-group">
-                        <div class="input-label">TD Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-td-grade" placeholder="Enter TD grade">
-                    </div>
-                `;
-            }
-            
-            if (subject.hasTP) {
-                cardHTML += `
-                    <div class="input-group">
-                        <div class="input-label">TP Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-tp-grade" placeholder="Enter TP grade">
-                    </div>
-                `;
-            }
-            
-            if (subject.hasExam) {
-                cardHTML += `
-                    <div class="input-group">
-                        <div class="input-label">Exam Grade</div>
-                        <input type="number" min="0" max="20" step="0.25" class="input-field mobile-exam-grade" placeholder="Enter exam grade">
-                    </div>
-                `;
-            }
-            
-            // Add result row
-            cardHTML += `
-                    <div class="result-row">
-                        <div>
-                            <div class="text-sm text-gray-500">Average</div>
-                            <div class="font-medium mobile-subject-average">-</div>
-                        </div>
-                        <div>
-                            <div class="text-sm text-gray-500">Weighted</div>
-                            <div class="font-medium mobile-weighted-average">-</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            card.innerHTML = cardHTML;
-            mobileContainer.appendChild(card);
-            
-            // Add event listeners to mobile inputs
-            const inputs = card.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    calculateMobileSubjectAverage(card, semesterNum);
-                    
-                    // Also update the desktop view
-                    const desktopRow = getDesktopRowForSubject(subject.name, semesterNum);
-                    if (desktopRow) {
-                        updateDesktopRowFromMobile(card, desktopRow);
-                    }
-                });
-            });
-        }
-        
-        function getDesktopRowForSubject(subjectName, semesterNum) {
-            const tableId = `subjectsTable${semesterNum === 1 ? '' : semesterNum}`;
-            return document.querySelector(`#${tableId} tr[data-subject-name="${subjectName}"]`);
-        }
-        
-        function updateDesktopRowFromMobile(mobileCard, desktopRow) {
-            // Get values from mobile
-            const tdInput = mobileCard.querySelector('.mobile-td-grade');
-            const tpInput = mobileCard.querySelector('.mobile-tp-grade');
-            const examInput = mobileCard.querySelector('.mobile-exam-grade');
-            
-            // Update desktop inputs
-            if (tdInput) {
-                const desktopTdInput = desktopRow.querySelector('.td-grade');
-                if (desktopTdInput) desktopTdInput.value = tdInput.value;
-            }
-            
-            if (tpInput) {
-                const desktopTpInput = desktopRow.querySelector('.tp-grade');
-                if (desktopTpInput) desktopTpInput.value = tpInput.value;
-            }
-            
-            if (examInput) {
-                const desktopExamInput = desktopRow.querySelector('.exam-grade');
-                if (desktopExamInput) desktopExamInput.value = examInput.value;
-            }
-            
-            // Calculate desktop average
-            const semesterNum = parseInt(mobileCard.dataset.semester);
-            calculateSubjectAverage(desktopRow, semesterNum);
-        }
-        
-        function updateMobileCardFromDesktop(desktopRow, mobileCard) {
-            // Get values from desktop
-            const tdInput = desktopRow.querySelector('.td-grade');
-            const tpInput = desktopRow.querySelector('.tp-grade');
-            const examInput = desktopRow.querySelector('.exam-grade');
-            
-            // Update mobile inputs
-            if (tdInput) {
-                const mobileTdInput = mobileCard.querySelector('.mobile-td-grade');
-                if (mobileTdInput) mobileTdInput.value = tdInput.value;
-            }
-            
-            if (tpInput) {
-                const mobileTpInput = mobileCard.querySelector('.mobile-tp-grade');
-                if (mobileTpInput) mobileTpInput.value = tpInput.value;
-            }
-            
-            if (examInput) {
-                const mobileExamInput = mobileCard.querySelector('.mobile-exam-grade');
-                if (mobileExamInput) mobileExamInput.value = examInput.value;
-            }
-            
-            // Calculate mobile average
-            const semesterNum = parseInt(mobileCard.dataset.semester);
-            calculateMobileSubjectAverage(mobileCard, semesterNum);
-        }
-        
-        function calculateMobileSubjectAverage(card, semesterNum) {
-            // Get the weight values from the card's data attributes
-            const tdWeight = parseFloat(card.dataset.tdWeight) || 0;
-            const tpWeight = parseFloat(card.dataset.tpWeight) || 0;
-            const examWeight = parseFloat(card.dataset.examWeight) || 0;
-            
-            // Get input elements (they might not exist if N/A)
-            const tdInput = card.querySelector('.mobile-td-grade');
-            const tpInput = card.querySelector('.mobile-tp-grade');
-            const examInput = card.querySelector('.mobile-exam-grade');
-            
-            const averageElement = card.querySelector('.mobile-subject-average');
-            const weightedElement = card.querySelector('.mobile-weighted-average');
-            
-            // Get values (or 0 if N/A)
-            let td = tdInput ? (parseFloat(tdInput.value) || 0) : 0;
-            let tp = tpInput ? (parseFloat(tpInput.value) || 0) : 0;
-            let exam = examInput ? (parseFloat(examInput.value) || 0) : 0;
-            let coef = parseFloat(card.querySelector('.subject-header .text-gray-500').textContent.replace('Coef:', '').trim()) || 1;
-            
-            // Check if any values were entered
-            let hasTD = tdInput && tdInput.value !== '';
-            let hasTP = tpInput && tpInput.value !== '';
-            let hasExam = examInput && examInput.value !== '';
-            
-            if (!hasTD && !hasTP && !hasExam) {
-                averageElement.textContent = "-";
-                averageElement.classList.remove('failing-grade', 'passing-grade');
-                weightedElement.textContent = "-";
-                return;
-            }
-            
-            // Calculate average based on weights and what's available
-            let average = 0;
-            let totalWeight = 0;
-            
-            // Calculate based on the weights and available inputs
-            if (tdWeight > 0 && hasTD) {
-                average += td * tdWeight;
-                totalWeight += tdWeight;
-            }
-            
-            if (tpWeight > 0 && hasTP) {
-                average += tp * tpWeight;
-                totalWeight += tpWeight;
-            }
-            
-            if (examWeight > 0 && hasExam) {
-                average += exam * examWeight;
-                totalWeight += examWeight;
-            }
-            
-            // If we have some values but not all required ones
-            if (totalWeight > 0 && totalWeight < (tdWeight + tpWeight + examWeight)) {
-                // Normalize to account for missing components
-                average = average / totalWeight;
-            } else if (totalWeight === 0) {
-                average = 0;
-            } else {
-                // All required components are present, no need to normalize
-                average = average;
-            }
-            
-            averageElement.textContent = average.toFixed(2);
-            
-            // Add grade styling based on value
-            if (average < 10) {
-                averageElement.classList.add('failing-grade');
-                averageElement.classList.remove('passing-grade');
-            } else {
-                averageElement.classList.add('passing-grade');
-                averageElement.classList.remove('failing-grade');
-            }
-            
-            // Calculate weighted average
-            const weighted = average * coef;
-            weightedElement.textContent = weighted.toFixed(2);
-            
-            // Update semester average
-            calculateSemesterAverage(semesterNum);
-        }
-        
-        function calculateSubjectAverage(row, semesterNum) {
-            // Get the weight values from the row's data attributes
-            const tdWeight = parseFloat(row.dataset.tdWeight) || 0;
-            const tpWeight = parseFloat(row.dataset.tpWeight) || 0;
-            const examWeight = parseFloat(row.dataset.examWeight) || 0;
-            
-            // Get input elements (they might not exist if N/A)
-            const tdInput = row.querySelector('.td-grade');
-            const tpInput = row.querySelector('.tp-grade');
-            const examInput = row.querySelector('.exam-grade');
-            
-            const averageCell = row.querySelector('.subject-average');
-            const coeffInput = row.querySelector('input[type="number"][readonly]');
-            const weightedCell = row.querySelector('.weighted-average');
-            
-            // Get values (or 0 if N/A)
-            let td = tdInput ? (parseFloat(tdInput.value) || 0) : 0;
-            let tp = tpInput ? (parseFloat(tpInput.value) || 0) : 0;
-            let exam = examInput ? (parseFloat(examInput.value) || 0) : 0;
-            let coef = parseFloat(coeffInput.value) || 1;
-            
-            // Check if any values were entered
-            let hasTD = tdInput && tdInput.value !== '';
-            let hasTP = tpInput && tpInput.value !== '';
-            let hasExam = examInput && examInput.value !== '';
-            
-            if (!hasTD && !hasTP && !hasExam) {
-                averageCell.textContent = "-";
-                averageCell.classList.remove('failing-grade', 'passing-grade');
-                weightedCell.textContent = "-";
-                return;
-            }
-            
-            // Calculate average based on weights and what's available
-            let average = 0;
-            let totalWeight = 0;
-            
-            // Calculate based on the weights and available inputs
-            if (tdWeight > 0 && hasTD) {
-                average += td * tdWeight;
-                totalWeight += tdWeight;
-            }
-            
-            if (tpWeight > 0 && hasTP) {
-                average += tp * tpWeight;
-                totalWeight += tpWeight;
-            }
-            
-            if (examWeight > 0 && hasExam) {
-                average += exam * examWeight;
-                totalWeight += examWeight;
-            }
-            
-            // If we have some values but not all required ones
-            if (totalWeight > 0 && totalWeight < (tdWeight + tpWeight + examWeight)) {
-                // Normalize to account for missing components
-                average = average / totalWeight;
-            } else if (totalWeight === 0) {
-                average = 0;
-            } else {
-                // All required components are present, no need to normalize
-                average = average;
-            }
-            
-            averageCell.textContent = average.toFixed(2);
-            
-            // Add grade styling based on value
-            if (average < 10) {
-                averageCell.classList.add('failing-grade');
-                averageCell.classList.remove('passing-grade');
-            } else {
-                averageCell.classList.add('passing-grade');
-                averageCell.classList.remove('failing-grade');
-            }
-            
-            // Calculate weighted average
-            const weighted = average * coef;
-            weightedCell.textContent = weighted.toFixed(2);
-            
-            // Update semester average
-            calculateSemesterAverage(semesterNum);
-        }
-        
-        function calculateSemesterAverage(semesterNum) {
-            // For desktop view
-            const tableId = `subjectsTable${semesterNum === 1 ? '' : semesterNum}`;
-            const rows = document.querySelectorAll(`#${tableId} tr`);
-            
-            // For mobile view
-            const mobileCards = document.querySelectorAll(`.mobile-subject-card[data-semester="${semesterNum}"]`);
-            
-            let totalWeighted = 0;
-            let totalCoefficients = 0;
-            
-            // Calculate from desktop view if available
-            if (rows.length > 0) {
-                rows.forEach(row => {
-                    const weightedCell = row.querySelector('.weighted-average');
-                    const coeffInput = row.querySelector('input[type="number"][readonly]');
-                    const averageCell = row.querySelector('.subject-average');
-                    
-                    if (averageCell.textContent !== "-") {
-                        const weighted = parseFloat(weightedCell.textContent);
-                        const coef = parseFloat(coeffInput.value) || 1;
-                        
-                        if (!isNaN(weighted)) {
-                            totalWeighted += weighted;
-                            totalCoefficients += coef;
-                        }
-                    }
-                });
-            } 
-            // Otherwise calculate from mobile view
-            else if (mobileCards.length > 0) {
-                mobileCards.forEach(card => {
-                    const weightedElement = card.querySelector('.mobile-weighted-average');
-                    const coefText = card.querySelector('.subject-header .text-gray-500').textContent;
-                    const averageElement = card.querySelector('.mobile-subject-average');
-                    
-                    if (averageElement.textContent !== "-") {
-                        const weighted = parseFloat(weightedElement.textContent);
-                        const coef = parseFloat(coefText.replace('Coef:', '').trim()) || 1;
-                        
-                        if (!isNaN(weighted)) {
-                            totalWeighted += weighted;
-                            totalCoefficients += coef;
-                        }
-                    }
-                });
-            }
-            
-            const semesterAverage = totalCoefficients > 0 ? totalWeighted / totalCoefficients : 0;
-            const semesterAverageElement = document.getElementById(`semesterAverage${semesterNum === 1 ? '' : semesterNum}`);
-            semesterAverageElement.textContent = semesterAverage.toFixed(2);
-            
-            // Add color based on average
-            if (semesterAverage < 10) {
-                semesterAverageElement.classList.add('text-red-600');
-                semesterAverageElement.classList.remove('text-green-600');
-            } else {
-                semesterAverageElement.classList.add('text-green-600');
-                semesterAverageElement.classList.remove('text-red-600');
-            }
-        }
-        
-        // Define all semesters and their subjects
-        const allSemesters = {
-            1: [
-                { name: "Physics 1 (Physique 1)", hasTD: true, hasTP: true, hasExam: true, coef: 4, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                { name: "Chemistry 1 (Chimie 1)", hasTD: true, hasTP: true, hasExam: true, coef: 4, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                { name: "Computer Science (Informatique)", hasTD: true, hasTP: false, hasExam: false, coef: 2, tdWeight: 1, tpWeight: 0, examWeight: 0 },
-                { name: "Algebra 1 (Algèbre 1)", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                { name: "Analysis 1 (Analyse 1)", hasTD: true, hasTP: false, hasExam: true, coef: 3, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                { name: "Probability & Statistics (Proba Stat)", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                { name: "English (Anglais)", hasTD: false, hasTP: false, hasExam: true, coef: 1, tdWeight: 0, tpWeight: 0, examWeight: 1.0 },
-                { name: "Ethics (Éthique)", hasTD: false, hasTP: false, hasExam: true, coef: 1, tdWeight: 0, tpWeight: 0, examWeight: 1.0 }
-            ],
-            2: [
-                { name: "Physics 2", hasTD: true, hasTP: true, hasExam: true, coef: 4, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                { name: "Chemistry 2", hasTD: true, hasTP: true, hasExam: true, coef: 4, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                { name: "Programming (Informatique 2)", hasTD: true, hasTP: false, hasExam: false, coef: 2, tdWeight: 1, tpWeight: 0, examWeight: 0 },
-                { name: "Algebra 2", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                { name: "Analysis 2", hasTD: true, hasTP: false, hasExam: true, coef: 3, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                { name: "Dessin", hasTD: false, hasTP: true, hasExam: false, coef: 2, tdWeight: 0, tpWeight: 1, examWeight: 0 },
-                { name: "Métier", hasTD: false, hasTP: false, hasExam: true, coef: 1, tdWeight: 0, tpWeight: 0, examWeight: 1 },
-                { name: "English (Anglais)", hasTD: false, hasTP: false, hasExam: true, coef: 1, tdWeight: 0, tpWeight: 0, examWeight: 1.0 }
-            ],
-            3: [
-                { name: "Analysis 3 (Analyse 3)", hasTD: true, hasTP: false, hasExam: true, coef: 3, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                { name: "Numerical Analysis 1 (Analyse Numérique 1)", hasTD: true, hasTP: true, hasExam: true, coef: 3, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                { name: "Waves and Vibrations (Ondes et Vibrations)", hasTD: true, hasTP: true, hasExam: true, coef: 3, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                { name: "Fluid Mechanics (Mécanique des Fluides)", hasTD: true, hasTP: true, hasExam: true, coef: 4, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                { name: "Rational Mechanics (Mécanique Rationnelle)", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                { name: "Computer Science 3 (Informatique 3)", hasTD: false, hasTP: true, hasExam: true, coef: 2, tdWeight: 0, tpWeight: 0.4, examWeight: 0.6 },
-                { name: "Computer-Aided Design (Conception Assistée par PC)", hasTD: false, hasTP: true, hasExam: false, coef: 1, tdWeight: 0, tpWeight: 1, examWeight: 0 },
-                { name: "English (Anglais)", hasTD: true, hasTP: false, hasExam: false, coef: 1, tdWeight: 1, tpWeight: 0, examWeight: 0 }
-            ],
-            4: [
-                { name: "Numerical Analysis 2 (Analyse Numérique 2)", hasTD: true, hasTP: true, hasExam: true, coef: 3, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                { name: "Strength of Materials (Résistance des Matériaux)", hasTD: true, hasTP: true, hasExam: true, coef: 3, tdWeight: 0.2, tpWeight: 0.2, examWeight: 0.6 },
-                { name: "Fundamental Electronics (Électronique Fondamentale)", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                { name: "Fundamental Electricity (Électricité Fondamentale)", hasTD: true, hasTP: false, hasExam: true, coef: 2, tdWeight: 0.4, tpWeight: 0, examWeight: 0.6 },
-                { name: "Measurement and Metrology (Mesure et Métrologie)", hasTD: false, hasTP: true, hasExam: true, coef: 2, tdWeight: 0, tpWeight: 0.4, examWeight: 0.6 },
-                { name: "Computer Science 4 (Informatique 4)", hasTD: false, hasTP: true, hasExam: true, coef: 2, tdWeight: 0, tpWeight: 0.4, examWeight: 0.6 },
-                { name: "Computer-Aided Design 2 (Conception Assistée par PC 2)", hasTD: false, hasTP: true, hasExam: false, coef: 2, tdWeight: 0, tpWeight: 1, examWeight: 0 },
-                { name: "Expression Techniques (Techniques d'Expression)", hasTD: true, hasTP: false, hasExam: false, coef: 1, tdWeight: 1, tpWeight: 0, examWeight: 0 }
-            ]
-        };
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94712421b6fdba94',t:'MTc0ODQ3MDg0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;"></iframe>
-
-</body></html>
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c477bc871f9cc2b',t:'MTc2OTUwODg3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
