@@ -15,7 +15,7 @@
       font-family: 'Poppins', sans-serif;
     }
     .gradient-bg {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      background: #1a1a2e;
     }
     .card-gradient {
       background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
@@ -26,22 +26,26 @@
       box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
     }
     .semester-tab-active {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     }
     .input-field {
       background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.2);
       transition: all 0.3s ease;
+      min-height: 44px;
+      font-size: 16px;
     }
     .input-field:focus {
-      background: rgba(255,255,255,0.15);
-      border-color: #4facfe;
-      box-shadow: 0 0 15px rgba(79, 172, 254, 0.3);
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.4);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
     }
     .result-card {
-      background: linear-gradient(145deg, rgba(79, 172, 254, 0.2) 0%, rgba(0, 242, 254, 0.1) 100%);
-      border: 1px solid rgba(79, 172, 254, 0.3);
+      background: linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 100%);
+      border: 2px solid rgba(255,255,255,0.25);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
     .subject-card {
       background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
@@ -50,11 +54,11 @@
     }
     .subject-card:hover {
       transform: translateY(-2px);
-      border-color: rgba(79, 172, 254, 0.4);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      border-color: rgba(255,255,255,0.25);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
     }
     .glow-text {
-      text-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
     .reset-btn {
       background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
@@ -68,16 +72,10 @@
       background: linear-gradient(145deg, rgba(233, 69, 96, 0.1) 0%, rgba(255, 107, 107, 0.05) 100%);
       border: 2px dashed rgba(233, 69, 96, 0.4);
     }
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 20px rgba(79, 172, 254, 0.3); }
-      50% { box-shadow: 0 0 40px rgba(79, 172, 254, 0.6); }
-    }
-    .average-display {
-      animation: pulse-glow 2s ease-in-out infinite;
-    }
+
     .scroll-container {
       scrollbar-width: thin;
-      scrollbar-color: rgba(79, 172, 254, 0.5) rgba(255,255,255,0.1);
+      scrollbar-color: rgba(255,255,255,0.3) rgba(255,255,255,0.1);
     }
     .scroll-container::-webkit-scrollbar {
       width: 6px;
@@ -87,7 +85,7 @@
       border-radius: 3px;
     }
     .scroll-container::-webkit-scrollbar-thumb {
-      background: rgba(79, 172, 254, 0.5);
+      background: rgba(255,255,255,0.3);
       border-radius: 3px;
     }
   </style>
@@ -97,8 +95,12 @@
  <body class="h-full gradient-bg text-white overflow-auto scroll-container">
   <div id="app" class="min-h-full flex flex-col"><!-- Header -->
    <header class="py-6 px-4 text-center border-b border-white/10">
-    <h1 id="app-title" class="text-3xl md:text-4xl font-bold glow-text mb-2">🎓 ST ing Grade Calculator</h1>
-    <p class="text-gray-400 text-sm md:text-base">Calculate your semester averages easily</p>
+    <div class="flex items-center justify-center gap-3 mb-2">
+     <svg class="w-10 h-10 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+     </svg>
+     <h1 id="app-title" class="text-3xl md:text-4xl font-bold glow-text">ST ing Grade Calculator</h1>
+    </div>
+    <p class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">احسب معدّلك بسرعة وبدقّة لكل موسم، بواجهة بسيطة ومتوافقة مع الجوال</p>
    </header><!-- Year Tabs -->
    <nav class="px-4 py-4">
     <div class="flex flex-wrap justify-center gap-2 md:gap-3 max-w-4xl mx-auto"><button onclick="selectYear(1)" id="year-tab-1" class="year-tab tab-active px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-300"> 1st Year </button> <button onclick="selectYear(2)" id="year-tab-2" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 2nd Year </button> <button onclick="selectYear(3)" id="year-tab-3" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 3rd Year </button> <button onclick="selectYear(4)" id="year-tab-4" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 4th Year </button> <button onclick="selectYear(5)" id="year-tab-5" class="year-tab px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold text-sm md:text-base bg-white/10 hover:bg-white/20 transition-all duration-300"> 5th Year </button>
@@ -113,7 +115,7 @@
     </div>
    </main><!-- Footer -->
    <footer class="py-4 px-4 border-t border-white/10 text-center">
-    <p class="text-gray-400 text-sm">Project by: <span id="dev-name" class="text-cyan-400 font-semibold">Khalil Doua</span></p><a href="https://t.me/KhqLiL" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 text-sm mt-1 transition-colors">
+    <p class="text-gray-400 text-sm">Project by: <span id="dev-name" class="text-purple-300 font-semibold">Khalil Doua</span></p><a href="https://t.me/KhqLiL" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-purple-300 hover:text-purple-200 text-sm mt-1 transition-colors">
      <svg class="w-4 h-4" fill="currentColor" viewbox="0 0 24 24">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
      </svg> @KhqLiL </a>
@@ -150,6 +152,19 @@
           { name: "Dessin", coef: 2, fields: ["TP"], weights: [1] },
           { name: "Métier", coef: 1, fields: ["Exam"], weights: [1] },
           { name: "English (Anglais)", coef: 1, fields: ["Exam"], weights: [1] }
+        ]
+      },
+      2: { // Year 2
+        1: [ // Semester 3
+          { name: "التحليل 3 — Analyse 3", coef: 3, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "التحليل العددي 1 — Analyse Numérique 1", coef: 3, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "الموجات والاهتزازات — Ondes et Vibrations", coef: 3, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "الكهرباء الأساسية — Électricité Fondamentale", coef: 3, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "الميكانيك النظرية — Mécanique Théorique", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "البرمجة بلغة بايثون — Programmation Python", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "الرسم بمساعدة الحاسوب — CAO", coef: 1, fields: ["Exam"], weights: [1] },
+          { name: "الطاقة والبيئة — Énergie et Environnement", coef: 1, fields: ["Exam"], weights: [1] },
+          { name: "المواد في الهندسة الكهربائية — Matériaux", coef: 1, fields: ["Exam"], weights: [1] }
         ]
       }
     };
@@ -323,7 +338,7 @@
       const actualSemester = semBase + currentSemester;
       
       // Check if data available for this year/semester
-      if (currentYear === 1) {
+      if (currentYear === 1 || (currentYear === 2 && currentSemester === 1)) {
         renderCalculator(contentArea);
       } else {
         renderComingSoon(contentArea, actualSemester);
@@ -338,10 +353,10 @@
       let html = `
         <div class="space-y-4">
           <!-- Semester Average Card -->
-          <div class="result-card rounded-2xl p-6 text-center average-display">
-            <p class="text-gray-300 mb-2">Semester Average</p>
-            <p id="semester-average" class="text-4xl font-bold text-gray-400">--</p>
-            <p class="text-gray-400 text-sm mt-2">Total Coefficients: ${totalCoef}</p>
+          <div class="result-card rounded-2xl p-6 text-center">
+            <p class="text-gray-300 mb-2 text-lg font-medium">Semester Average</p>
+            <p id="semester-average" class="text-4xl md:text-5xl font-bold text-gray-400">--</p>
+            <p class="text-gray-400 text-sm mt-3">Total Coefficients: ${totalCoef}</p>
           </div>
 
           <!-- Reset Button -->
@@ -381,14 +396,14 @@
               <span class="font-medium">${subject.name}</span>
             </td>
             <td class="text-center py-3 px-2">
-              <span class="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-lg text-sm font-medium">${subject.coef}</span>
+              <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded-lg text-sm font-medium">${subject.coef}</span>
             </td>
             <td class="text-center py-3 px-2">
               ${subject.fields.includes('TD') ? `
                 <input type="number" step="0.25" min="0" max="20" 
                   value="${subjectGrades.TD !== undefined ? subjectGrades.TD : ''}"
                   onchange="handleGradeInput(${idx}, 'TD', this.value)"
-                  class="input-field w-16 text-center py-1 px-2 rounded-lg text-white outline-none"
+                  class="input-field w-20 text-center py-2 px-2 rounded-lg text-white"
                   placeholder="--">
               ` : '<span class="text-gray-500">-</span>'}
             </td>
@@ -397,7 +412,7 @@
                 <input type="number" step="0.25" min="0" max="20" 
                   value="${subjectGrades.TP !== undefined ? subjectGrades.TP : ''}"
                   onchange="handleGradeInput(${idx}, 'TP', this.value)"
-                  class="input-field w-16 text-center py-1 px-2 rounded-lg text-white outline-none"
+                  class="input-field w-20 text-center py-2 px-2 rounded-lg text-white"
                   placeholder="--">
               ` : '<span class="text-gray-500">-</span>'}
             </td>
@@ -406,7 +421,7 @@
                 <input type="number" step="0.25" min="0" max="20" 
                   value="${subjectGrades.Exam !== undefined ? subjectGrades.Exam : ''}"
                   onchange="handleGradeInput(${idx}, 'Exam', this.value)"
-                  class="input-field w-16 text-center py-1 px-2 rounded-lg text-white outline-none"
+                  class="input-field w-20 text-center py-2 px-2 rounded-lg text-white"
                   placeholder="--">
               ` : '<span class="text-gray-500">-</span>'}
             </td>
@@ -435,36 +450,36 @@
           <div class="subject-card rounded-xl p-4">
             <div class="flex justify-between items-start mb-3">
               <h3 class="font-semibold text-white flex-1 pr-2">${subject.name}</h3>
-              <span class="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-lg text-xs font-medium whitespace-nowrap">Coef: ${subject.coef}</span>
+              <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded-lg text-xs font-medium whitespace-nowrap">Coef: ${subject.coef}</span>
             </div>
             <div class="grid grid-cols-3 gap-2 mb-3">
               ${subject.fields.includes('TD') ? `
                 <div class="text-center">
-                  <label class="text-xs text-gray-400 block mb-1">TD</label>
+                  <label class="text-xs text-gray-400 block mb-1 font-medium">TD</label>
                   <input type="number" step="0.25" min="0" max="20" 
                     value="${subjectGrades.TD !== undefined ? subjectGrades.TD : ''}"
                     onchange="handleGradeInput(${idx}, 'TD', this.value)"
-                    class="input-field w-full text-center py-2 px-2 rounded-lg text-white outline-none text-sm"
+                    class="input-field w-full text-center py-3 px-3 rounded-lg text-white"
                     placeholder="--">
                 </div>
               ` : '<div></div>'}
               ${subject.fields.includes('TP') ? `
                 <div class="text-center">
-                  <label class="text-xs text-gray-400 block mb-1">TP</label>
+                  <label class="text-xs text-gray-400 block mb-1 font-medium">TP</label>
                   <input type="number" step="0.25" min="0" max="20" 
                     value="${subjectGrades.TP !== undefined ? subjectGrades.TP : ''}"
                     onchange="handleGradeInput(${idx}, 'TP', this.value)"
-                    class="input-field w-full text-center py-2 px-2 rounded-lg text-white outline-none text-sm"
+                    class="input-field w-full text-center py-3 px-3 rounded-lg text-white"
                     placeholder="--">
                 </div>
               ` : '<div></div>'}
               ${subject.fields.includes('Exam') ? `
                 <div class="text-center">
-                  <label class="text-xs text-gray-400 block mb-1">Exam</label>
+                  <label class="text-xs text-gray-400 block mb-1 font-medium">Exam</label>
                   <input type="number" step="0.25" min="0" max="20" 
                     value="${subjectGrades.Exam !== undefined ? subjectGrades.Exam : ''}"
                     onchange="handleGradeInput(${idx}, 'Exam', this.value)"
-                    class="input-field w-full text-center py-2 px-2 rounded-lg text-white outline-none text-sm"
+                    class="input-field w-full text-center py-3 px-3 rounded-lg text-white"
                     placeholder="--">
                 </div>
               ` : '<div></div>'}
@@ -494,13 +509,13 @@
           <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Coming Soon</h2>
           <p class="text-gray-300 mb-6 leading-relaxed">
             هذه الحاسبة غير مكتملة لهذه السنة/الموسم حالياً.<br>
-            تواصل مع المطور لإضافة مواد ومعاملات وأوزان الحساب.
+            تواصل مع المطور لإضافة مواد ومعاملات وأوزان ال��ساب.
           </p>
           <div class="bg-white/10 rounded-xl p-4 inline-block">
             <p class="text-gray-400 text-sm mb-2">Developer</p>
             <p class="text-white font-semibold">Khalil Doua</p>
             <a href="https://t.me/KhqLiL" target="_blank" rel="noopener noreferrer" 
-               class="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mt-2 transition-colors">
+               class="inline-flex items-center gap-2 text-purple-300 hover:text-purple-200 mt-2 transition-colors">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
               </svg>
@@ -546,5 +561,5 @@
       });
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c477bc871f9cc2b',t:'MTc2OTUwODg3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c47b50d97c8cc2b',t:'MTc2OTUxMTIxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
