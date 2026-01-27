@@ -93,12 +93,12 @@
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full gradient-bg text-white overflow-auto scroll-container">
-  <div id="app" class="min-h-full flex flex-col"><!-- Header -->
+  <div id="app" class="min-h-full w-full flex flex-col"><!-- Header -->
    <header class="py-6 px-4 text-center border-b border-white/10">
     <div class="flex items-center justify-center gap-3 mb-2">
      <svg class="w-10 h-10 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
      </svg>
-     <h1 id="app-title" class="text-3xl md:text-4xl font-bold glow-text">ST ing Grade Calculator</h1>
+     <h1 id="app-title" class="text-3xl md:text-4xl font-bold glow-text">🎓 ST ing Grade Calculator</h1>
     </div>
     <p class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">يرجى الابلاغ عن اي خطأ او مشكله في التيليغرام المتروك اسفل الصفحه</p>
    </header><!-- Year Tabs -->
@@ -134,37 +134,37 @@
     const subjectsData = {
       1: { // Year 1
         1: [ // Semester 1
-          { name: "Physics 1 (Physique 1)", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
-          { name: "Chemistry 1 (Chimie 1)", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
-          { name: "Computer Science (Informatique)", coef: 2, fields: ["TD"], weights: [1] },
-          { name: "Algebra 1 (Algèbre 1)", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
-          { name: "Analysis 1 (Analyse 1)", coef: 3, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
-          { name: "Probability & Statistics", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Physique 1", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "Chimie 1", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "Programmation", coef: 2, fields: ["TD"], weights: [1] },
+          { name: "Algèbre 1", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Analyse 1", coef: 3, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Probabilité & Statistiques", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
           { name: "Les Métiers", coef: 1, fields: ["Exam"], weights: [1] },
-          { name: "Ethics (Éthique)", coef: 1, fields: ["Exam"], weights: [1] }
+          { name: "Éthique", coef: 1, fields: ["Exam"], weights: [1] }
         ],
         2: [ // Semester 2
-          { name: "Physics 2", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
-          { name: "Chemistry 2", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
-          { name: "Programming (Informatique 2)", coef: 2, fields: ["TD"], weights: [1] },
-          { name: "Algebra 2", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
-          { name: "Analysis 2", coef: 3, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Physique 2", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "Chimie 2", coef: 4, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "Programmation 2", coef: 2, fields: ["TD"], weights: [1] },
+          { name: "Algèbre 2", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Analyse 2", coef: 3, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
           { name: "Dessin", coef: 2, fields: ["TP"], weights: [1] },
           { name: "Métier", coef: 1, fields: ["Exam"], weights: [1] },
-          { name: "English (Anglais)", coef: 1, fields: ["Exam"], weights: [1] }
+          { name: "Anglais", coef: 1, fields: ["Exam"], weights: [1] }
         ]
       },
       2: { // Year 2
         1: [ // Semester 3
-          { name: "التحليل 3 — Analyse 3", coef: 3, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
-          { name: "التحليل العددي 1 — Analyse Numérique 1", coef: 3, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
-          { name: "الموجات والاهتزازات — Ondes et Vibrations", coef: 3, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
-          { name: "الكهرباء الأساسية — Électricité Fondamentale", coef: 3, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
-          { name: "الميكانيك النظرية — Mécanique Théorique", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
-          { name: "البرمجة بلغة بايثون — Programmation Python", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
-          { name: "الرسم بمساعدة الحاسوب — CAO", coef: 1, fields: ["Exam"], weights: [1] },
-          { name: "الطاقة والبيئة — Énergie et Environnement", coef: 1, fields: ["Exam"], weights: [1] },
-          { name: "المواد في الهندسة الكهربائية — Matériaux", coef: 1, fields: ["Exam"], weights: [1] }
+          { name: "Analyse 3", coef: 3, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Analyse Numérique 1", coef: 3, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "Ondes et Vibrations", coef: 3, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "Électricité Fondamentale", coef: 3, fields: ["TD", "TP", "Exam"], weights: [0.2, 0.2, 0.6] },
+          { name: "Mécanique Théorique", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "Programmation Python", coef: 2, fields: ["TD", "Exam"], weights: [0.4, 0.6] },
+          { name: "CAO", coef: 1, fields: ["Exam"], weights: [1] },
+          { name: "Énergie et Environnement", coef: 1, fields: ["Exam"], weights: [1] },
+          { name: "Matériaux", coef: 1, fields: ["Exam"], weights: [1] }
         ]
       }
     };
@@ -509,7 +509,7 @@
           <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Coming Soon</h2>
           <p class="text-gray-300 mb-6 leading-relaxed">
             هذه الحاسبة غير مكتملة لهذه السنة/الموسم حالياً.<br>
-            تواصل مع المطور لإضافة مواد ومعاملات وأوزان ال��ساب.
+            تواصل مع المطور لإضافة مواد ومعاملات وأوزان الحساب.
           </p>
           <div class="bg-white/10 rounded-xl p-4 inline-block">
             <p class="text-gray-400 text-sm mb-2">Developer</p>
@@ -561,5 +561,5 @@
       });
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c47b50d97c8cc2b',t:'MTc2OTUxMTIxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c47c18c857bcc2b',t:'MTc2OTUxMTcyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
